@@ -1,0 +1,29 @@
+group 'com.wanpg.yauld'
+version '1.0-SNAPSHOT'
+
+apply plugin: 'groovy'
+apply plugin: 'java'
+apply plugin: 'maven'
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile gradleApi()
+    compile localGroovy()
+    compile 'com.android.tools.build:gradle:2.2.3'
+}
+
+repositories {
+    mavenCentral()
+    jcenter()
+}
+
+uploadArchives {
+    repositories {
+        mavenDeployer {
+//            repository(url: uri('http://www.snow-pear.com/nexus/repository/snapshots/')) {
+//                authentication(userName: "wangjinpeng", password: "wangjinpeng123456")
+//            }
+            repository(url: uri('../repo'))
+        }
+    }
+}
