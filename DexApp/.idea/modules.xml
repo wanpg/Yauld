@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/DexApp.iml" filepath="$PROJECT_DIR$/DexApp.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/yauld-loader/yauld-loader.iml" filepath="$PROJECT_DIR$/yauld-loader/yauld-loader.iml" />
     </modules>
   </component>
 </project>

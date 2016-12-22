@@ -1,0 +1,2 @@
+com/wanpg/yaulddemo/DemoApplication.class
+com/wanpg/yaulddemo/MainActivity.class

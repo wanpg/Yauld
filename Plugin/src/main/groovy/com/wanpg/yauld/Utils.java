@@ -1,9 +1,6 @@
 package com.wanpg.yauld;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -154,6 +151,38 @@ public class Utils {
                 }
             }else{
                 file.delete();
+            }
+        }
+    }
+
+    public static void writeToFile(String path, String content){
+        try {
+            byte[] bytes = content.getBytes();
+            FileOutputStream fos=new FileOutputStream(path);
+            fos.write(bytes,0, bytes.length);
+            fos.flush();
+            fos.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * 关闭资源
+     *
+     * @param closeable 资源
+     */
+    public static void close(Closeable... closeable) {
+        if (closeable == null) {
+            return;
+        }
+        for (Closeable c : closeable) {
+            if (c != null) {
+                try {
+                    c.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

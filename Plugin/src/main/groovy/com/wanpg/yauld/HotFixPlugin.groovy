@@ -6,7 +6,7 @@ import com.android.build.gradle.api.BaseVariantOutput
 import com.android.build.gradle.internal.api.ApkVariantOutputImpl
 import com.wanpg.yauld.task.BaseTask
 import com.wanpg.yauld.task.BeforePackageTask
-import com.wanpg.yauld.task.DexModifyTask
+import com.wanpg.yauld.task.DexModifyTransform
 import com.wanpg.yauld.task.ManifestModifyTask
 import org.gradle.api.Plugin
 import org.gradle.api.Project
@@ -19,7 +19,6 @@ class HotFixPlugin implements Plugin<Project> {
     void apply(Project project) {
 
         project.extensions.create("yauld_hotfix_params", ConfigParams)
-//        project.gradle.addListener(new HotFixListener())
 
         def android = project.extensions.android //AppExtension
 
@@ -28,13 +27,16 @@ class HotFixPlugin implements Plugin<Project> {
         }
 
         AppExtension androidExtension = android
-//        android.registerTransform(new DexModifyTransform())
+
+        androidExtension.registerTransform(new DexModifyTransform(project, androidExtension))
 
         project.afterEvaluate {
             ConfigParams configParams = project.extensions.findByType(ConfigParams)
 
-            Utils.print("Yauld 打包 开关 ${configParams.enable}")
-            Utils.print("Yauld 打包 主工程名称 ${configParams.mainProjectName}")
+            if(!configParams.enable){
+                project.logger.info("Yauld Hotfix Plug-in is disabled")
+                return
+            }
 
             androidExtension.applicationVariants.all { ApplicationVariant variant ->
 
@@ -42,10 +44,8 @@ class HotFixPlugin implements Plugin<Project> {
 
                 if (variantOutput instanceof ApkVariantOutputImpl) {
 
-                    def instantRunMode = variantOutput.processResources.instantRunMode
-                    Utils.print("variantOutput.processResources.instantRunMode 是否开启 ${instantRunMode}")
-                    if (instantRunMode) {
-                        Utils.print("Yauld Hotfix Plug-in can not run under instant run mode")
+                    if (variantOutput.processResources.instantRunMode) {
+                        project.logger.info("Yauld Hotfix Plug-in can not run under instant run mode")
                         return
                     }
 
@@ -63,16 +63,10 @@ class HotFixPlugin implements Plugin<Project> {
 
                     variantOutput.processResources.dependsOn manifestModifyTask
 
-                    // 配置dex修改备份的task
-                    def dexModifyTask = project.tasks.create("yauldReplaceAndBackup${variantName}Dex", DexModifyTask)
-                    myTasks.add(dexModifyTask)
-                    variantOutput.packageApplication.dependsOn dexModifyTask
-
                     // 修改资源，将AppInfo.properties 和 打包的dex 打入 resource.zip
                     def beforePackageTask = project.tasks.create("yauldModify${variantName}ResBeforePackage", BeforePackageTask)
                     myTasks.add(beforePackageTask)
                     beforePackageTask.resourcesPackOutPath = variantOutput.packageApplication.resourceFile.path
-                    beforePackageTask.dependsOn dexModifyTask
                     variantOutput.packageApplication.dependsOn beforePackageTask
 
                     // 为自己的task赋值

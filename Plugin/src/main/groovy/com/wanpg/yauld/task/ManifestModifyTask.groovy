@@ -19,6 +19,14 @@ import javax.xml.transform.stream.StreamResult;
  */
 class ManifestModifyTask extends BaseTask {
 
+    static final String AppInfoClass = "package com.wanpg.yauld;\n" +
+            "\n" +
+            "public class AppInfo {\n" +
+            "    public static String APPLICATION_ID = \"{APPLICATION_ID}\";\n" +
+            "    public static String APPLICATION_NAME = \"{APPLICATION_NAME}\";\n" +
+            "}"
+
+
     String manifestOutPath
     public static final String YAULD_APPLICATION_ID = "com.wanpg.yauld.YauldDexApplication"
 
@@ -59,16 +67,10 @@ class ManifestModifyTask extends BaseTask {
             String tempFolder = HotFix.getTempFolder(project, flavor, buildType)
             Utils.print("临时目录:${tempFolder}")
             FileUtils.mkdirs(tempFolder)
-            String appInfoProperty = tempFolder + File.separator + "AppInfo.properties"
-            FileUtils.createFile(appInfoProperty)
-            try {
-                Properties properties = new Properties()
-                properties.setProperty("application_id", applicationId)
-                properties.setProperty("application_name", applicationName)
-                properties.store(new FileOutputStream(appInfoProperty), "")
-            } catch (Exception e) {
-                e.printStackTrace()
-            }
+            String appInfoProperty = tempFolder + File.separator + "AppInfo.java"
+
+            def replace = AppInfoClass.replace("{APPLICATION_ID}", applicationId).replace("{APPLICATION_NAME}", applicationName)
+            Utils.writeToFile(appInfoProperty, replace)
         }
     }
 }

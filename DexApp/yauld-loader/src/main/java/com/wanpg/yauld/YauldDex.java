@@ -31,32 +31,8 @@ public class YauldDex {
     }
 
     static final String YAULD_DEX_NAME = "yauld-dex.zip";
-    static final String APP_INFO_NAME = "AppInfo.properties";
-
-    public static AppInfo appInfo;
 
     public static void init(Context context) {
-        try {
-            YauldDex.debug("----------------init---C");
-            ZipFile apkFile = new ZipFile(context.getApplicationInfo().sourceDir);
-            Enumeration<? extends ZipEntry> entries = apkFile.entries();
-            while (entries.hasMoreElements()) {
-                ZipEntry zipEntry = entries.nextElement();
-                String zipEntryName = zipEntry.getName();
-                if (APP_INFO_NAME.equals(zipEntryName)) {
-                    InputStream inputStream = apkFile.getInputStream(zipEntry);
-                    if (inputStream != null) {
-                        YauldDex.debug("----------------init---D");
-                        appInfo = AppInfo.load(context, inputStream);
-                        inputStream.close();
-                    }
-                    break;
-                }
-            }
-            apkFile.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public static String getDexFolder(Context context) {
@@ -75,7 +51,7 @@ public class YauldDex {
     static Application createRealApplication() {
         Application realApplication = null;
         try {
-            Class<?> aClass = Class.forName(appInfo.application_name);
+            Class<?> aClass = Class.forName(AppInfo.APPLICATION_NAME);
             if (aClass != null) {
                 realApplication = (Application) aClass.getConstructor(new Class[0]).newInstance();
             }
@@ -172,7 +148,7 @@ public class YauldDex {
 
             String dexFolderPath = getDexFolder(context);
             File dexFolder = new File(dexFolderPath);
-            if(dexFolder.exists() && md5Set != null && md5Set.size() > 0){
+            if(false && dexFolder.exists() && md5Set != null && md5Set.size() > 0){
                 YauldDex.debug("----------------unZipDex---B");
                 boolean isNeedUnZip = false;
                 File[] files = dexFolder.listFiles();
