@@ -3,20 +3,24 @@ package com.wanpg.yauld;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Build;
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Enumeration;
-import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -26,26 +30,41 @@ import java.util.zip.ZipFile;
 
 public class YauldDex {
 
-    static void debug(String info){
+    public static boolean isLoadFinished() {
+        return true;
+    }
+
+    static void debug(String info) {
         Log.d("yauld", info);
     }
 
     static final String YAULD_DEX_NAME = "yauld-dex.zip";
+    private static final String YAULD_SP_NAME = "yauld_sp";
 
-    public static void init(Context context) {
+    static void init(Context context) {
     }
 
-    public static String getDexFolder(Context context) {
+    private static String getDexFolder(Context context) {
         return getYauldFolder(context) + File.separator + "dex";
     }
 
-    public static String getDexOptFolder(Context context) {
+    private static String getDexOptFolder(Context context) {
 
         return context.getDir("odex", Context.MODE_PRIVATE) + File.separator + "dex_opt";
     }
 
-    public static String getYauldFolder(Context context) {
+    private static String getYauldFolder(Context context) {
         return context.getExternalFilesDir(null).getPath() + File.separator + "yauld";
+    }
+
+    static void invokeMethod(Class<?> clazz, String methodName, Class<?> paramType, Object object, Object value) {
+        try {
+            Object localObject = clazz.getDeclaredMethod(methodName, paramType);
+            ((Method) localObject).setAccessible(true);
+            ((Method) localObject).invoke(object, value);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     static Application createRealApplication() {
@@ -64,14 +83,98 @@ public class YauldDex {
         return realApplication;
     }
 
-    public static void monkeyPatchApplication(Context context, Application bootstrap, Application realApplication, String externalResourceFile) {
+    static void unZipDex(Context context) {
+        try {
+            YauldDex.debug("----------------unZipDex---A");
+            String md5Save = getYauldDexZipMd5(context);
+            File dexFile = new File(getYauldFolder(context), YAULD_DEX_NAME);
+
+            if (TextUtils.isEmpty(md5Save) || !dexFile.exists() || md5Save.equals(Utils.md5sum(dexFile.getAbsolutePath()))) {
+                // 进行解压操作
+                ZipFile apkFile = new ZipFile(context.getApplicationInfo().sourceDir);
+                Enumeration<? extends ZipEntry> entries = apkFile.entries();
+                while (entries.hasMoreElements()) {
+                    ZipEntry zipEntry = entries.nextElement();
+                    String zipEntryName = zipEntry.getName();
+                    if (YAULD_DEX_NAME.equals(zipEntryName)) {
+                        InputStream inputStream = apkFile.getInputStream(zipEntry);
+                        FileUtils.copyStream(inputStream, getYauldFolder(context), YAULD_DEX_NAME);
+                        break;
+                    }
+                }
+                apkFile.close();
+                setYauldDexZipMd5(context, Utils.md5sum(dexFile.getAbsolutePath()));
+            }
+
+            YauldDex.debug("----------------unZipDex---B");
+            String dexFolderPath = getDexFolder(context);
+            if (!FileUtils.exists(dexFolderPath)) {
+                FileUtils.mkdirs(dexFolderPath);
+            }
+            FileUtils.unZipFiles(dexFile, dexFolderPath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    static String getYauldDexZipMd5(Context context) {
+        return getSharePreferences(context).getString("yauld-dex-zip-md5", null);
+    }
+
+    static boolean setYauldDexZipMd5(Context context, String md5) {
+        SharedPreferences.Editor editor = getSharePreferences(context).edit();
+        editor.putString("yauld-dex-zip-md5", md5);
+        return editor.commit();
+    }
+
+    static SharedPreferences getSharePreferences(Context context) {
+        return context.getSharedPreferences(YAULD_SP_NAME, Context.MODE_PRIVATE);
+    }
+
+    static void setupClassLoader(Context contextBase, ClassLoader classLoader) {
+        String nativeLibraryPath = "";
+
+        try {
+            nativeLibraryPath = (String) classLoader.getClass().getMethod("getLdLibraryPath", new Class[0]).invoke(classLoader);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        String dexOptFolderPath = getDexOptFolder(contextBase);
+        String dexFolder = getDexFolder(contextBase);
+
+        String mainDexFilePath = null;
+        ArrayList<String> dexList = new ArrayList<>();
+        File[] files = new File(dexFolder).listFiles();
+        for (File dexFile : files) {
+            String dexFileName = dexFile.getName();
+            String dexFilePath = dexFile.getAbsolutePath();
+            if ("classes.dex".equals(dexFileName)) {
+                mainDexFilePath = dexFilePath;
+            } else {
+                dexList.add(dexFilePath);
+            }
+        }
+
+        if (!FileUtils.exists(dexOptFolderPath)) {
+            FileUtils.mkdirs(dexOptFolderPath);
+        }
+
+        YauldDex.debug("----------------setupClassLoader---A---" + System.currentTimeMillis());
+//        ClassLoader inject = YauldDexClassLoader.inject(classLoader, nativeLibraryPath, dexOptFolderPath, dexList);
+        ClassLoader inject = YauldDexClassLoader.inject(classLoader, nativeLibraryPath, dexOptFolderPath, mainDexFilePath, dexList);
+        // 结束后
+        YauldDex.debug("----------------setupClassLoader---B---" + System.currentTimeMillis());
+    }
+
+    static void monkeyPatchApplication(Context context, Application bootstrap, Application realApplication, String externalResourceFile) {
         try {
             Class<?> activityThread = Class.forName("android.app.ActivityThread");
             Method m = activityThread.getMethod("currentActivityThread");
             m.setAccessible(true);
             Object currentActivityThread = m.invoke(activityThread);
             if (realApplication != null) {
-                if(currentActivityThread != null) {
+                if (currentActivityThread != null) {
                     Field mInitialApplication = activityThread.getDeclaredField("mInitialApplication");
                     mInitialApplication.setAccessible(true);
                     Application initialApplication = (Application) mInitialApplication.get(currentActivityThread);
@@ -131,119 +234,164 @@ public class YauldDex {
         }
     }
 
-    static void invokeMethod(Class<?> clazz, String methodName, Class<?> paramType, Object object, Object value) {
-        try {
-            Object localObject = clazz.getDeclaredMethod(methodName, paramType);
-            ((Method) localObject).setAccessible(true);
-            ((Method) localObject).invoke(object, value);
-        } catch (Exception e) {
-            e.printStackTrace();
+    static void installOtherDexes(ClassLoader loader, File dexDir, List<String> filePaths) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException, IOException {
+        List<File> files = new ArrayList<>();
+        if (filePaths != null) {
+            for (String path : filePaths) {
+                files.add(new File(path));
+            }
+        }
+        if (!files.isEmpty()) {
+            if (Build.VERSION.SDK_INT >= 24) {
+                YauldDex.V24.install(loader, files, dexDir);
+            } else if (Build.VERSION.SDK_INT >= 23) {
+                YauldDex.V23.install(loader, files, dexDir);
+            } else if (Build.VERSION.SDK_INT >= 19) {
+                YauldDex.V19.install(loader, files, dexDir);
+            } else if (Build.VERSION.SDK_INT >= 14) {
+                YauldDex.V14.install(loader, files, dexDir);
+            }
         }
     }
 
-    public static void unZipDex(Context context) {
-        try {
-            YauldDex.debug("----------------unZipDex---A");
-            Set<String> md5Set = getDexMd5s(context);
+    private static final class V14 {
+        private V14() {
+        }
 
-            String dexFolderPath = getDexFolder(context);
-            File dexFolder = new File(dexFolderPath);
-            if(false && dexFolder.exists() && md5Set != null && md5Set.size() > 0){
-                YauldDex.debug("----------------unZipDex---B");
-                boolean isNeedUnZip = false;
-                File[] files = dexFolder.listFiles();
-                if(files != null && files.length > 0){
-                    YauldDex.debug("----------------unZipDex---C");
-                    for(File dexFile : files){
-                        if(!md5Set.contains(Utils.md5sum(dexFile.getPath()))){
-                            YauldDex.debug("----------------unZipDex---D");
-                            isNeedUnZip = true;
-                            break;
-                        }
-                    }
-                }else {
-                    YauldDex.debug("----------------unZipDex---E");
-                    isNeedUnZip = true;
-                }
-                if(!isNeedUnZip) {
-                    YauldDex.debug("----------------unZipDex---F");
-                    return;
-                }
-            }
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries, File optimizedDirectory) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            Field pathListField = YauldDex.findField(loader, "pathList");
+            Object dexPathList = pathListField.get(loader);
+            YauldDex.expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList, new ArrayList(additionalClassPathEntries), optimizedDirectory));
+        }
 
-            if(!FileUtils.exists(dexFolderPath)){
-                FileUtils.mkdirs(dexFolderPath);
-            }
-
-            YauldDex.debug("----------------unZipDex---G");
-            ZipFile apkFile = new ZipFile(context.getApplicationInfo().sourceDir);
-            Enumeration<? extends ZipEntry> entries = apkFile.entries();
-            while (entries.hasMoreElements()) {
-                ZipEntry zipEntry = entries.nextElement();
-                String zipEntryName = zipEntry.getName();
-                if (YAULD_DEX_NAME.equals(zipEntryName)) {
-                    InputStream inputStream = apkFile.getInputStream(zipEntry);
-                    FileUtils.copyStream(inputStream, getYauldFolder(context), YAULD_DEX_NAME);
-                    break;
-                }
-            }
-            apkFile.close();
-
-            FileUtils.unZipFiles(new File(getYauldFolder(context), YAULD_DEX_NAME), dexFolderPath);
-            FileUtils.delete(getYauldFolder(context) + File.separator + YAULD_DEX_NAME);
-
-            Set<String> md5SetNew = new HashSet<>();
-            File dexFolderNew = new File(dexFolderPath);
-            if(dexFolderNew.exists()){
-                File[] dexFilesNew = dexFolderNew.listFiles();
-                if(dexFilesNew != null){
-                    for(File dexNew : dexFilesNew){
-                        md5SetNew.add(Utils.md5sum(dexNew.getPath()));
-                    }
-                }
-            }
-            saveDexMd5s(context, md5SetNew);
-        } catch (IOException e) {
-            e.printStackTrace();
+        private static Object[] makeDexElements(Object dexPathList, ArrayList<File> files, File optimizedDirectory) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+            Method makeDexElements = YauldDex.findMethod(dexPathList, "makeDexElements", new Class[]{ArrayList.class, File.class});
+            return (Object[]) makeDexElements.invoke(dexPathList, new Object[]{files, optimizedDirectory});
         }
     }
 
-    static void setupClassLoader(Context contextBase, ClassLoader classLoader) {
-        String nativeLibraryPath = "";
-
-        try {
-            nativeLibraryPath = (String) classLoader.getClass().getMethod("getLdLibraryPath", new Class[0]).invoke(classLoader);
-        } catch (Exception e) {
-            e.printStackTrace();
+    private static final class V19 {
+        private V19() {
         }
 
-        String dexOptFolderPath = getDexOptFolder(contextBase);
-        String dexFolder = getDexFolder(contextBase);
-
-        ArrayList<String> dexList = new ArrayList<>();
-        File[] files = new File(dexFolder).listFiles();
-        for (File dexFile : files) {
-            dexList.add(dexFile.getPath());
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries, File optimizedDirectory) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            Field pathListField = YauldDex.findField(loader, "pathList");
+            Object dexPathList = pathListField.get(loader);
+            ArrayList suppressedExceptions = new ArrayList();
+            YauldDex.expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList, new ArrayList(additionalClassPathEntries), optimizedDirectory, suppressedExceptions));
+            YauldDex.dexElementsSuppressedExceptions(loader, suppressedExceptions);
         }
 
-        if(!FileUtils.exists(dexOptFolderPath)){
-            FileUtils.mkdirs(dexOptFolderPath);
+        private static Object[] makeDexElements(Object dexPathList, ArrayList<File> files, File optimizedDirectory, ArrayList<IOException> suppressedExceptions) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+            Method makeDexElements = YauldDex.findMethod(dexPathList, "makeDexElements", new Class[]{ArrayList.class, File.class, ArrayList.class});
+            return (Object[]) makeDexElements.invoke(dexPathList, new Object[]{files, optimizedDirectory, suppressedExceptions});
         }
-
-        YauldDex.debug("----------------setupClassLoader---A---" + System.currentTimeMillis());
-        YauldDexLoader.inject(classLoader, nativeLibraryPath, dexOptFolderPath, dexList);
-        // 结束后
-        YauldDex.debug("----------------setupClassLoader---B---" + System.currentTimeMillis());
     }
 
-    public static void saveDexMd5s(Context context, Set<String> modify){
-        SharedPreferences yauld = context.getSharedPreferences("yauld", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = yauld.edit();
-        editor.putStringSet("dex_md5", modify);
-        editor.commit();
+    private static final class V23 {
+        private V23() {
+        }
+
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries, File optimizedDirectory) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            Field pathListField = YauldDex.findField(loader, "pathList");
+            Object dexPathList = pathListField.get(loader);
+            ArrayList suppressedExceptions = new ArrayList();
+            YauldDex.expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList, new ArrayList(additionalClassPathEntries), optimizedDirectory, suppressedExceptions));
+            YauldDex.dexElementsSuppressedExceptions(loader, suppressedExceptions);
+        }
+
+        private static Object[] makeDexElements(Object dexPathList, ArrayList<File> files, File optimizedDirectory, ArrayList<IOException> suppressedExceptions) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+            Method makeDexElements = YauldDex.findMethod(dexPathList, "makePathElements", new Class[]{List.class, File.class, List.class});
+            return (Object[]) makeDexElements.invoke(dexPathList, new Object[]{files, optimizedDirectory, suppressedExceptions});
+        }
     }
-    public static Set<String> getDexMd5s(Context context){
-        SharedPreferences yauld = context.getSharedPreferences("yauld", Context.MODE_PRIVATE);
-        return yauld.getStringSet("dex_md5", null);
+
+    private static final class V24 {
+        private V24() {
+        }
+
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries, File optimizedDirectory) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            Field pathListField = YauldDex.findField(loader, "pathList");
+            Object dexPathList = pathListField.get(loader);
+            ArrayList suppressedExceptions = new ArrayList();
+            YauldDex.expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList, new ArrayList(additionalClassPathEntries), optimizedDirectory, suppressedExceptions, loader));
+            YauldDex.dexElementsSuppressedExceptions(loader, suppressedExceptions);
+        }
+
+        private static Object[] makeDexElements(Object dexPathList, ArrayList<File> files, File optimizedDirectory, ArrayList<IOException> suppressedExceptions, ClassLoader classLoader) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
+            Method makeDexElements = YauldDex.findMethod(dexPathList, "makeDexElements", new Class[]{List.class, File.class, List.class, ClassLoader.class});
+            return (Object[]) makeDexElements.invoke(dexPathList, new Object[]{files, optimizedDirectory, suppressedExceptions, classLoader});
+        }
+    }
+
+    private static void dexElementsSuppressedExceptions(ClassLoader loader, ArrayList suppressedExceptions) throws NoSuchFieldException, IllegalAccessException {
+        if (suppressedExceptions.size() > 0) {
+            Iterator suppressedExceptionsField = suppressedExceptions.iterator();
+
+            while (suppressedExceptionsField.hasNext()) {
+                IOException dexElementsSuppressedExceptions = (IOException) suppressedExceptionsField.next();
+                Log.w("MultiDex", "Exception in makeDexElement", dexElementsSuppressedExceptions);
+            }
+
+            Field suppressedExceptionsField1 = YauldDex.findField(loader, "dexElementsSuppressedExceptions");
+            IOException[] dexElementsSuppressedExceptions1 = (IOException[]) suppressedExceptionsField1.get(loader);
+            if (dexElementsSuppressedExceptions1 == null) {
+                dexElementsSuppressedExceptions1 = (IOException[]) suppressedExceptions.toArray(new IOException[suppressedExceptions.size()]);
+            } else {
+                IOException[] combined = new IOException[suppressedExceptions.size() + dexElementsSuppressedExceptions1.length];
+                suppressedExceptions.toArray(combined);
+                System.arraycopy(dexElementsSuppressedExceptions1, 0, combined, suppressedExceptions.size(), dexElementsSuppressedExceptions1.length);
+                dexElementsSuppressedExceptions1 = combined;
+            }
+
+            suppressedExceptionsField1.set(loader, dexElementsSuppressedExceptions1);
+        }
+    }
+
+    private static void expandFieldArray(Object instance, String fieldName, Object[] extraElements) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        Field jlrField = findField(instance, fieldName);
+        Object[] original = (Object[]) jlrField.get(instance);
+        Object[] combined = (Object[]) Array.newInstance(original.getClass().getComponentType(), original.length + extraElements.length);
+        System.arraycopy(original, 0, combined, 0, original.length);
+        System.arraycopy(extraElements, 0, combined, original.length, extraElements.length);
+        jlrField.set(instance, combined);
+    }
+
+    private static Field findField(Object instance, String name) throws NoSuchFieldException {
+        Class clazz = instance.getClass();
+
+        while (clazz != null) {
+            try {
+                Field e = clazz.getDeclaredField(name);
+                if (!e.isAccessible()) {
+                    e.setAccessible(true);
+                }
+
+                return e;
+            } catch (NoSuchFieldException var4) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+
+        throw new NoSuchFieldException("Field " + name + " not found in " + instance.getClass());
+    }
+
+    private static Method findMethod(Object instance, String name, Class... parameterTypes) throws NoSuchMethodException {
+        Class clazz = instance.getClass();
+
+        while (clazz != null) {
+            try {
+                Method e = clazz.getDeclaredMethod(name, parameterTypes);
+                if (!e.isAccessible()) {
+                    e.setAccessible(true);
+                }
+
+                return e;
+            } catch (NoSuchMethodException var5) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+
+        throw new NoSuchMethodException("Method " + name + " with parameters " + Arrays.asList(parameterTypes) + " not found in " + instance.getClass());
     }
 }

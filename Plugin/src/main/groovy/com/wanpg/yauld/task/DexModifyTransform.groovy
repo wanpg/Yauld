@@ -6,7 +6,7 @@ import com.google.common.collect.ImmutableSet
 import com.wanpg.yauld.Command
 import com.wanpg.yauld.ConfigParams
 import com.wanpg.yauld.HotFix
-import com.wanpg.yauld.Utils
+import com.wanpg.yauld.utils.Utils
 import org.gradle.api.Project
 import org.zeroturnaround.zip.ZipUtil
 

@@ -7,6 +7,5 @@ package com.wanpg.yauld;
 public class Test {
 
     public Test() {
-        Utils.print();
     }
 }

@@ -1,7 +1,7 @@
 package com.wanpg.yauld.task
 
 import com.wanpg.yauld.HotFix
-import com.wanpg.yauld.Utils
+import com.wanpg.yauld.utils.Utils
 import org.zeroturnaround.zip.FileSource
 import org.zeroturnaround.zip.ZipEntrySource
 import org.zeroturnaround.zip.ZipUtil

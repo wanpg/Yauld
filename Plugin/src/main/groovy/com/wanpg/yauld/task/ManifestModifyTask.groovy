@@ -1,8 +1,8 @@
 package com.wanpg.yauld.task
 
-import com.wanpg.yauld.FileUtils
+import com.wanpg.yauld.utils.FileUtils
 import com.wanpg.yauld.HotFix
-import com.wanpg.yauld.Utils
+import com.wanpg.yauld.utils.Utils
 import org.w3c.dom.Document
 import org.w3c.dom.Element
 import org.w3c.dom.NodeList

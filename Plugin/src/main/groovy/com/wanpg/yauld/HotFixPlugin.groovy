@@ -20,6 +20,8 @@ class HotFixPlugin implements Plugin<Project> {
 
         project.extensions.create("yauld_hotfix_params", ConfigParams)
 
+        project.gradle.addListener(new HotfixBuildListener())
+
         def android = project.extensions.android //AppExtension
 
         if (!(android instanceof AppExtension)) {
