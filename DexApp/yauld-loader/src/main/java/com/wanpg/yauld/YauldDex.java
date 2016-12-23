@@ -38,6 +38,10 @@ public class YauldDex {
         Log.d("yauld", info);
     }
 
+    static void debugWithTimeMillis(String info) {
+        Log.d("yauld", System.currentTimeMillis() + "--:--" + info);
+    }
+
     static final String YAULD_DEX_NAME = "yauld-dex.zip";
     private static final String YAULD_SP_NAME = "yauld_sp";
 
@@ -54,7 +58,7 @@ public class YauldDex {
     }
 
     private static String getYauldFolder(Context context) {
-        return context.getExternalFilesDir(null).getPath() + File.separator + "yauld";
+        return context.getFilesDir().getPath() + File.separator + "yauld";
     }
 
     static void invokeMethod(Class<?> clazz, String methodName, Class<?> paramType, Object object, Object value) {
@@ -85,9 +89,16 @@ public class YauldDex {
 
     static void unZipDex(Context context) {
         try {
-            YauldDex.debug("----------------unZipDex---A");
+            YauldDex.debugWithTimeMillis("----------------unZipDex---A");
             String md5Save = getYauldDexZipMd5(context);
-            File dexFile = new File(getYauldFolder(context), YAULD_DEX_NAME);
+
+            String yauldFolder = getYauldFolder(context);
+
+            if (!FileUtils.exists(yauldFolder)) {
+                FileUtils.mkdirs(yauldFolder);
+            }
+
+            File dexFile = new File(yauldFolder, YAULD_DEX_NAME);
 
             if (TextUtils.isEmpty(md5Save) || !dexFile.exists() || md5Save.equals(Utils.md5sum(dexFile.getAbsolutePath()))) {
                 // 进行解压操作
@@ -98,7 +109,7 @@ public class YauldDex {
                     String zipEntryName = zipEntry.getName();
                     if (YAULD_DEX_NAME.equals(zipEntryName)) {
                         InputStream inputStream = apkFile.getInputStream(zipEntry);
-                        FileUtils.copyStream(inputStream, getYauldFolder(context), YAULD_DEX_NAME);
+                        FileUtils.copyStream(inputStream, yauldFolder, YAULD_DEX_NAME);
                         break;
                     }
                 }
@@ -106,12 +117,13 @@ public class YauldDex {
                 setYauldDexZipMd5(context, Utils.md5sum(dexFile.getAbsolutePath()));
             }
 
-            YauldDex.debug("----------------unZipDex---B");
+            YauldDex.debugWithTimeMillis("----------------unZipDex---B");
             String dexFolderPath = getDexFolder(context);
             if (!FileUtils.exists(dexFolderPath)) {
                 FileUtils.mkdirs(dexFolderPath);
             }
             FileUtils.unZipFiles(dexFile, dexFolderPath);
+            YauldDex.debugWithTimeMillis("----------------unZipDex---C");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -234,7 +246,10 @@ public class YauldDex {
         }
     }
 
-    static void installOtherDexes(ClassLoader loader, File dexDir, List<String> filePaths) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException, IOException {
+
+    static void installOtherDexes(ClassLoader loader, File dexDir, List<String> filePaths)
+            throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException,
+            InvocationTargetException, NoSuchMethodException, IOException {
         List<File> files = new ArrayList<>();
         if (filePaths != null) {
             for (String path : filePaths) {
@@ -243,48 +258,94 @@ public class YauldDex {
         }
         if (!files.isEmpty()) {
             if (Build.VERSION.SDK_INT >= 24) {
-                YauldDex.V24.install(loader, files, dexDir);
+                V24.install(loader, files, dexDir);
             } else if (Build.VERSION.SDK_INT >= 23) {
-                YauldDex.V23.install(loader, files, dexDir);
+                V23.install(loader, files, dexDir);
             } else if (Build.VERSION.SDK_INT >= 19) {
-                YauldDex.V19.install(loader, files, dexDir);
+                V19.install(loader, files, dexDir);
             } else if (Build.VERSION.SDK_INT >= 14) {
-                YauldDex.V14.install(loader, files, dexDir);
+                V14.install(loader, files, dexDir);
             }
         }
     }
 
+    static final String TAG = YauldDex.class.getSimpleName();
+
+
+    /**
+     * Installer for platform versions 14, 15, 16, 17 and 18.
+     */
     private static final class V14 {
-        private V14() {
-        }
 
-        private static void install(ClassLoader loader, List<File> additionalClassPathEntries, File optimizedDirectory) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
-            Field pathListField = YauldDex.findField(loader, "pathList");
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries,
+                                    File optimizedDirectory)
+                throws IllegalArgumentException, IllegalAccessException,
+                NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            /* The patched class loader is expected to be a descendant of
+             * dalvik.system.BaseDexClassLoader. We modify its
+             * dalvik.system.DexPathList pathList field to append additional DEX
+             * file entries.
+             */
+            Field pathListField = findField(loader, "pathList");
             Object dexPathList = pathListField.get(loader);
-            YauldDex.expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList, new ArrayList(additionalClassPathEntries), optimizedDirectory));
+            expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList,
+                    new ArrayList<>(additionalClassPathEntries), optimizedDirectory));
         }
 
-        private static Object[] makeDexElements(Object dexPathList, ArrayList<File> files, File optimizedDirectory) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-            Method makeDexElements = YauldDex.findMethod(dexPathList, "makeDexElements", new Class[]{ArrayList.class, File.class});
-            return (Object[]) makeDexElements.invoke(dexPathList, new Object[]{files, optimizedDirectory});
+        /**
+         * A wrapper around
+         * {@code private static final dalvik.system.DexPathList#makeDexElements}.
+         */
+        private static Object[] makeDexElements(
+                Object dexPathList, ArrayList<File> files, File optimizedDirectory)
+                throws IllegalAccessException, InvocationTargetException,
+                NoSuchMethodException {
+            Method makeDexElements =
+                    findMethod(dexPathList, "makeDexElements", ArrayList.class, File.class);
+
+            return (Object[]) makeDexElements.invoke(dexPathList, files, optimizedDirectory);
         }
     }
 
+
+    /**
+     * Installer for platform versions 19.
+     */
     private static final class V19 {
-        private V19() {
-        }
 
-        private static void install(ClassLoader loader, List<File> additionalClassPathEntries, File optimizedDirectory) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
-            Field pathListField = YauldDex.findField(loader, "pathList");
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries,
+                                    File optimizedDirectory)
+                throws IllegalArgumentException, IllegalAccessException,
+                NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            /* The patched class loader is expected to be a descendant of
+             * dalvik.system.BaseDexClassLoader. We modify its
+             * dalvik.system.DexPathList pathList field to append additional DEX
+             * file entries.
+             */
+            Field pathListField = findField(loader, "pathList");
             Object dexPathList = pathListField.get(loader);
-            ArrayList suppressedExceptions = new ArrayList();
-            YauldDex.expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList, new ArrayList(additionalClassPathEntries), optimizedDirectory, suppressedExceptions));
-            YauldDex.dexElementsSuppressedExceptions(loader, suppressedExceptions);
+            ArrayList<IOException> suppressedExceptions = new ArrayList<>();
+            expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList,
+                    new ArrayList<>(additionalClassPathEntries), optimizedDirectory,
+                    suppressedExceptions));
+            dexElementsSuppressedExceptions(dexPathList, suppressedExceptions);
         }
 
-        private static Object[] makeDexElements(Object dexPathList, ArrayList<File> files, File optimizedDirectory, ArrayList<IOException> suppressedExceptions) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-            Method makeDexElements = YauldDex.findMethod(dexPathList, "makeDexElements", new Class[]{ArrayList.class, File.class, ArrayList.class});
-            return (Object[]) makeDexElements.invoke(dexPathList, new Object[]{files, optimizedDirectory, suppressedExceptions});
+        /**
+         * A wrapper around
+         * {@code private static final dalvik.system.DexPathList#makeDexElements}.
+         */
+        private static Object[] makeDexElements(
+                Object dexPathList, ArrayList<File> files, File optimizedDirectory,
+                ArrayList<IOException> suppressedExceptions)
+                throws IllegalAccessException, InvocationTargetException,
+                NoSuchMethodException {
+            Method makeDexElements =
+                    findMethod(dexPathList, "makeDexElements", ArrayList.class, File.class,
+                            ArrayList.class);
+
+            return (Object[]) makeDexElements.invoke(dexPathList, files, optimizedDirectory,
+                    suppressedExceptions);
         }
     }
 
@@ -292,17 +353,38 @@ public class YauldDex {
         private V23() {
         }
 
-        private static void install(ClassLoader loader, List<File> additionalClassPathEntries, File optimizedDirectory) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
-            Field pathListField = YauldDex.findField(loader, "pathList");
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries,
+                                    File optimizedDirectory)
+                throws IllegalArgumentException, IllegalAccessException,
+                NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            /* The patched class loader is expected to be a descendant of
+             * dalvik.system.BaseDexClassLoader. We modify its
+             * dalvik.system.DexPathList pathList field to append additional DEX
+             * file entries.
+             */
+            Field pathListField = findField(loader, "pathList");
             Object dexPathList = pathListField.get(loader);
-            ArrayList suppressedExceptions = new ArrayList();
-            YauldDex.expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList, new ArrayList(additionalClassPathEntries), optimizedDirectory, suppressedExceptions));
-            YauldDex.dexElementsSuppressedExceptions(loader, suppressedExceptions);
+            ArrayList<IOException> suppressedExceptions = new ArrayList<>();
+            expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList,
+                    new ArrayList<>(additionalClassPathEntries), optimizedDirectory,
+                    suppressedExceptions));
+            dexElementsSuppressedExceptions(dexPathList, suppressedExceptions);
         }
 
-        private static Object[] makeDexElements(Object dexPathList, ArrayList<File> files, File optimizedDirectory, ArrayList<IOException> suppressedExceptions) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-            Method makeDexElements = YauldDex.findMethod(dexPathList, "makePathElements", new Class[]{List.class, File.class, List.class});
-            return (Object[]) makeDexElements.invoke(dexPathList, new Object[]{files, optimizedDirectory, suppressedExceptions});
+        /**
+         * A wrapper around
+         * {@code private static final dalvik.system.DexPathList#makeDexElements}.
+         */
+        private static Object[] makeDexElements(
+                Object dexPathList, ArrayList<File> files, File optimizedDirectory,
+                ArrayList<IOException> suppressedExceptions)
+                throws IllegalAccessException, InvocationTargetException,
+                NoSuchMethodException {
+            Method makeDexElements =
+                    findMethod(dexPathList, "makeDexElements", List.class, File.class, List.class);
+
+            return (Object[]) makeDexElements.invoke(dexPathList, files, optimizedDirectory,
+                    suppressedExceptions);
         }
     }
 
@@ -310,88 +392,146 @@ public class YauldDex {
         private V24() {
         }
 
-        private static void install(ClassLoader loader, List<File> additionalClassPathEntries, File optimizedDirectory) throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
-            Field pathListField = YauldDex.findField(loader, "pathList");
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries,
+                                    File optimizedDirectory)
+                throws IllegalArgumentException, IllegalAccessException,
+                NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            /* The patched class loader is expected to be a descendant of
+             * dalvik.system.BaseDexClassLoader. We modify its
+             * dalvik.system.DexPathList pathList field to append additional DEX
+             * file entries.
+             */
+            Field pathListField = findField(loader, "pathList");
             Object dexPathList = pathListField.get(loader);
-            ArrayList suppressedExceptions = new ArrayList();
-            YauldDex.expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList, new ArrayList(additionalClassPathEntries), optimizedDirectory, suppressedExceptions, loader));
-            YauldDex.dexElementsSuppressedExceptions(loader, suppressedExceptions);
+            ArrayList<IOException> suppressedExceptions = new ArrayList<>();
+            expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList,
+                    new ArrayList<>(additionalClassPathEntries), optimizedDirectory,
+                    suppressedExceptions, loader));
+            dexElementsSuppressedExceptions(dexPathList, suppressedExceptions);
         }
 
-        private static Object[] makeDexElements(Object dexPathList, ArrayList<File> files, File optimizedDirectory, ArrayList<IOException> suppressedExceptions, ClassLoader classLoader) throws IllegalAccessException, InvocationTargetException, NoSuchMethodException {
-            Method makeDexElements = YauldDex.findMethod(dexPathList, "makeDexElements", new Class[]{List.class, File.class, List.class, ClassLoader.class});
-            return (Object[]) makeDexElements.invoke(dexPathList, new Object[]{files, optimizedDirectory, suppressedExceptions, classLoader});
+        /**
+         * A wrapper around
+         * {@code private static final dalvik.system.DexPathList#makeDexElements}.
+         */
+        private static Object[] makeDexElements(
+                Object dexPathList, ArrayList<File> files, File optimizedDirectory,
+                ArrayList<IOException> suppressedExceptions, ClassLoader classLoader)
+                throws IllegalAccessException, InvocationTargetException,
+                NoSuchMethodException {
+            Method makeDexElements =
+                    findMethod(dexPathList, "makeDexElements",
+                            List.class, File.class, List.class, ClassLoader.class);
+
+            return (Object[]) makeDexElements.invoke(dexPathList, files, optimizedDirectory,
+                    suppressedExceptions, classLoader);
         }
     }
 
-    private static void dexElementsSuppressedExceptions(ClassLoader loader, ArrayList suppressedExceptions) throws NoSuchFieldException, IllegalAccessException {
+    private static void dexElementsSuppressedExceptions(Object dexPathList,
+                                                        ArrayList<IOException> suppressedExceptions)
+            throws NoSuchFieldException, IllegalAccessException {
         if (suppressedExceptions.size() > 0) {
-            Iterator suppressedExceptionsField = suppressedExceptions.iterator();
-
-            while (suppressedExceptionsField.hasNext()) {
-                IOException dexElementsSuppressedExceptions = (IOException) suppressedExceptionsField.next();
-                Log.w("MultiDex", "Exception in makeDexElement", dexElementsSuppressedExceptions);
+            for (IOException e : suppressedExceptions) {
+                Log.w(TAG, "Exception in makeDexElement", e);
             }
+            Field suppressedExceptionsField =
+                    findField(dexPathList, "dexElementsSuppressedExceptions");
+            IOException[] dexElementsSuppressedExceptions =
+                    (IOException[]) suppressedExceptionsField.get(dexPathList);
 
-            Field suppressedExceptionsField1 = YauldDex.findField(loader, "dexElementsSuppressedExceptions");
-            IOException[] dexElementsSuppressedExceptions1 = (IOException[]) suppressedExceptionsField1.get(loader);
-            if (dexElementsSuppressedExceptions1 == null) {
-                dexElementsSuppressedExceptions1 = (IOException[]) suppressedExceptions.toArray(new IOException[suppressedExceptions.size()]);
+            if (dexElementsSuppressedExceptions == null) {
+                dexElementsSuppressedExceptions =
+                        suppressedExceptions.toArray(
+                                new IOException[suppressedExceptions.size()]);
             } else {
-                IOException[] combined = new IOException[suppressedExceptions.size() + dexElementsSuppressedExceptions1.length];
+                IOException[] combined =
+                        new IOException[suppressedExceptions.size() +
+                                dexElementsSuppressedExceptions.length];
                 suppressedExceptions.toArray(combined);
-                System.arraycopy(dexElementsSuppressedExceptions1, 0, combined, suppressedExceptions.size(), dexElementsSuppressedExceptions1.length);
-                dexElementsSuppressedExceptions1 = combined;
+                System.arraycopy(dexElementsSuppressedExceptions, 0, combined,
+                        suppressedExceptions.size(), dexElementsSuppressedExceptions.length);
+                dexElementsSuppressedExceptions = combined;
             }
 
-            suppressedExceptionsField1.set(loader, dexElementsSuppressedExceptions1);
+            suppressedExceptionsField.set(dexPathList, dexElementsSuppressedExceptions);
         }
     }
 
-    private static void expandFieldArray(Object instance, String fieldName, Object[] extraElements) throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+    /**
+     * Replace the value of a field containing a non null array, by a new array containing the
+     * elements of the original array plus the elements of extraElements.
+     *
+     * @param instance      the instance whose field is to be modified.
+     * @param fieldName     the field to modify.
+     * @param extraElements elements to append at the end of the array.
+     */
+    private static void expandFieldArray(Object instance, String fieldName,
+                                         Object[] extraElements)
+            throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
         Field jlrField = findField(instance, fieldName);
         Object[] original = (Object[]) jlrField.get(instance);
-        Object[] combined = (Object[]) Array.newInstance(original.getClass().getComponentType(), original.length + extraElements.length);
+        Object[] combined = (Object[]) Array.newInstance(
+                original.getClass().getComponentType(), original.length + extraElements.length);
         System.arraycopy(original, 0, combined, 0, original.length);
         System.arraycopy(extraElements, 0, combined, original.length, extraElements.length);
         jlrField.set(instance, combined);
     }
 
+    /**
+     * Locates a given field anywhere in the class inheritance hierarchy.
+     *
+     * @param instance an object to search the field into.
+     * @param name     field name
+     * @return a field object
+     * @throws NoSuchFieldException if the field cannot be located
+     */
     private static Field findField(Object instance, String name) throws NoSuchFieldException {
-        Class clazz = instance.getClass();
-
-        while (clazz != null) {
+        for (Class<?> clazz = instance.getClass(); clazz != null; clazz = clazz.getSuperclass()) {
             try {
-                Field e = clazz.getDeclaredField(name);
-                if (!e.isAccessible()) {
-                    e.setAccessible(true);
+                Field field = clazz.getDeclaredField(name);
+
+
+                if (!field.isAccessible()) {
+                    field.setAccessible(true);
                 }
 
-                return e;
-            } catch (NoSuchFieldException var4) {
-                clazz = clazz.getSuperclass();
+                return field;
+            } catch (NoSuchFieldException e) {
+                // ignore and search next
             }
         }
 
         throw new NoSuchFieldException("Field " + name + " not found in " + instance.getClass());
     }
 
-    private static Method findMethod(Object instance, String name, Class... parameterTypes) throws NoSuchMethodException {
-        Class clazz = instance.getClass();
-
-        while (clazz != null) {
+    /**
+     * Locates a given method anywhere in the class inheritance hierarchy.
+     *
+     * @param instance       an object to search the method into.
+     * @param name           method name
+     * @param parameterTypes method parameter types
+     * @return a method object
+     * @throws NoSuchMethodException if the method cannot be located
+     */
+    private static Method findMethod(Object instance, String name, Class<?>... parameterTypes)
+            throws NoSuchMethodException {
+        for (Class<?> clazz = instance.getClass(); clazz != null; clazz = clazz.getSuperclass()) {
             try {
-                Method e = clazz.getDeclaredMethod(name, parameterTypes);
-                if (!e.isAccessible()) {
-                    e.setAccessible(true);
+                Method method = clazz.getDeclaredMethod(name, parameterTypes);
+
+
+                if (!method.isAccessible()) {
+                    method.setAccessible(true);
                 }
 
-                return e;
-            } catch (NoSuchMethodException var5) {
-                clazz = clazz.getSuperclass();
+                return method;
+            } catch (NoSuchMethodException e) {
+                // ignore and search next
             }
         }
 
-        throw new NoSuchMethodException("Method " + name + " with parameters " + Arrays.asList(parameterTypes) + " not found in " + instance.getClass());
+        throw new NoSuchMethodException("Method " + name + " with parameters " +
+                Arrays.asList(parameterTypes) + " not found in " + instance.getClass());
     }
 }

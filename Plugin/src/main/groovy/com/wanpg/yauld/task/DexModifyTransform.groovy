@@ -69,7 +69,8 @@ class DexModifyTransform extends Transform {
         classesFolder.deleteDir()
         classesFolder.mkdirs()
 
-        if (configParams.enable) {
+        // 是否按照更新的打包
+        if (configParams.build_enable) {
             def taskSuffix = transformInvocation.context.path.toLowerCase().split(getTaskNamePrefix().toLowerCase())[1]
 
             if (taskSuffix.endsWith("release")) {
@@ -114,13 +115,8 @@ class DexModifyTransform extends Transform {
                             // 解压自己的jar 到class文件
                             ZipUtil.unpack(jarInput.file, classesFolder)
                         } else {
-                            // 将第三方库编译为dex
-                            if (configParams.multi_dex) {
-                                Command.execute(dxPath, "--dex", "--output", "${dexFolder}/classes${classIndex}.dex".toString(), jarInput.file.path)
-                            } else {
-                                new File(oldClassesTmpFolder, "classes${classIndex}.jar".toString()).bytes = jarInput.file.bytes
-                            }
-                            classIndex++
+                            // 解压开发者自有代码到临时目录
+                            ZipUtil.unpack(jarInput.file, oldClassesTmpFolder)
                         }
                     }
                 }
@@ -132,18 +128,17 @@ class DexModifyTransform extends Transform {
             Command.execute("javac", "-d", classesFolder.path, "-source", "1.7", "-target", "1.7", "${tempFolder}${File.separator}AppInfo.java")
 
             // 编译原APP的代码为main.dex
-            if (configParams.multi_dex) {
-                Command.execute(dxPath, "--dex", "--output", "${dexFolder.path}/classes.dex", oldClassesTmpFolder.path)
-            } else {
-                if(configParams.main_dex_list){
-                    Command.execute(dxPath, "--dex", "--output", dexFolder.path,
-                            "--multi-dex",
+            if (configParams.main_dex_list) {
+                Command.execute(dxPath, "--dex", "--output", dexFolder.path,
+                        "--multi-dex",
 //                            "--set-max-idx-number=50000",
-                            "--main-dex-list=${project.file(configParams.main_dex_list).path}".toString(), "--minimal-main-dex",
-                            oldClassesTmpFolder.path)
-                }else{
-                    Command.execute(dxPath, "--dex", "--output", dexFolder.path, "--multi-dex", "--set-max-idx-number=50000", oldClassesTmpFolder.path)
-                }
+                        "--main-dex-list=${project.file(configParams.main_dex_list).path}".toString(), "--minimal-main-dex",
+                        oldClassesTmpFolder.path)
+            } else {
+                Command.execute(dxPath, "--dex", "--output", dexFolder.path,
+                        "--multi-dex",
+//                            "--set-max-idx-number=50000",
+                        oldClassesTmpFolder.path)
             }
 
             // 压缩移动系统编译的Dex 到自己的临时目录
@@ -165,7 +160,7 @@ class DexModifyTransform extends Transform {
                 }
 
                 inputs.jarInputs.each { jarInput ->
-                    if(jarInput.file.isFile()){
+                    if (jarInput.file.isFile()) {
                         ZipUtil.unpack(jarInput.file, classesFolder)
                     }
                 }

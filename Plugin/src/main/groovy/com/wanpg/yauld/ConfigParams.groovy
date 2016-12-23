@@ -4,7 +4,15 @@ package com.wanpg.yauld
  * Created by wangjinpeng on 2016/12/13.
  */
 class ConfigParams {
-    boolean multi_dex
+    /**
+     * 主dex的保留列表
+     * 只适用于 update_enable 为true的情况
+     */
     String main_dex_list
-    boolean enable
+    /**
+     * 是否按照yauld的build进行
+     * 如果是true  application会被替换
+     * 如果是false 按照安卓原有的打包方式进行build
+     */
+    boolean build_enable
 }

@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: jboss:javassist:3.7.ga">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/jboss/javassist/3.7.ga/6d271a67a1d8718bfb225ace5a25f1c09427c9f8/javassist-3.7.ga.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/jboss/javassist/3.7.ga/89a9fc9f9f31a211779a7e945dfbd935871239f/javassist-3.7.ga-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -69,7 +69,8 @@ class ManifestModifyTask extends BaseTask {
             FileUtils.mkdirs(tempFolder)
             String appInfoProperty = tempFolder + File.separator + "AppInfo.java"
 
-            def replace = AppInfoClass.replace("{APPLICATION_ID}", applicationId).replace("{APPLICATION_NAME}", applicationName)
+            def replace = AppInfoClass.replace("{APPLICATION_ID}", applicationId)
+                    .replace("{APPLICATION_NAME}", applicationName)
             Utils.writeToFile(appInfoProperty, replace)
         }
     }

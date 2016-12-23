@@ -20,9 +20,9 @@ public class YauldDexApplication extends Application {
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         YauldDex.debug("----------------A");
+
         // 初始化，加载appinfo
         YauldDex.init(base);
-
         // 解压yuald-dex.zip
         YauldDex.unZipDex(base);
 
@@ -31,13 +31,12 @@ public class YauldDexApplication extends Application {
 
         // 创建真正的Application
         realApplication = YauldDex.createRealApplication();
-        if(realApplication == null){
+        if (realApplication == null) {
             throw new IllegalArgumentException("找不到真正的Application");
         }
 
         // 调用真正Application的 attachBaseContext 方法
         YauldDex.invokeMethod(ContextWrapper.class, "attachBaseContext", Context.class, realApplication, base);
-
     }
 
     @Override
@@ -82,7 +81,7 @@ public class YauldDexApplication extends Application {
     @Override
     public Context createPackageContext(String packageName, int flags) throws PackageManager.NameNotFoundException {
         Context localContext = realApplication.createPackageContext(packageName, flags);
-        if(localContext == null){
+        if (localContext == null) {
             return realApplication;
         }
         return localContext;

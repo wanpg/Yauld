@@ -19,7 +19,7 @@ public class FileUtils {
     public static void copyFile(String src, String outFolder, String outName) {
         try {
             FileInputStream input = new FileInputStream(src);
-            FileOutputStream output = new FileOutputStream(outFolder + (outFolder.endsWith(File.separator) ? "" : File.separator) + outName);
+            FileOutputStream output = new FileOutputStream(new File(outFolder, outName));
             byte[] b = new byte[1024 * 5];
             int len;
             while ((len = input.read(b)) != -1) {
@@ -35,7 +35,7 @@ public class FileUtils {
 
     public static void copyStream(InputStream input, String outFolder, String outName) {
         try {
-            FileOutputStream output = new FileOutputStream(outFolder + (outFolder.endsWith(File.separator) ? "" : File.separator) + outName);
+            FileOutputStream output = new FileOutputStream(new File(outFolder, outName));
             byte[] b = new byte[1024 * 5];
             int len;
             while ((len = input.read(b)) != -1) {

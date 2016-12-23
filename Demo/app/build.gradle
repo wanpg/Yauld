@@ -57,7 +57,6 @@ dependencies {
 apply plugin: 'yauld.hotfix.plugin'
 
 yauld_hotfix_params {
-    multi_dex = false
+    build_enable = true
     main_dex_list = 'maindexlist.txt'
-    enable = true
 }

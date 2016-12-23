@@ -17,6 +17,7 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="library" name="Gradle: com.android.tools.build:gradle:2.2.3" level="project" />
+    <orderEntry type="library" name="Gradle: jboss:javassist:3.7.ga" level="project" />
     <orderEntry type="module-library">
       <library name="Gradle: gradle-tooling-api-builders-2.13">
         <CLASSES>

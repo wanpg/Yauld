@@ -35,7 +35,7 @@ class HotFixPlugin implements Plugin<Project> {
         project.afterEvaluate {
             ConfigParams configParams = project.extensions.findByType(ConfigParams)
 
-            if(!configParams.enable){
+            if(!configParams.build_enable){
                 project.logger.info("Yauld Hotfix Plug-in is disabled")
                 return
             }
