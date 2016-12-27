@@ -16,46 +16,51 @@ public class YauldDexClassLoader extends ClassLoader {
 
     private Thread otherDexesThread;
 
-    public YauldDexClassLoader(ClassLoader original, String nativeLibraryPath, final String codeCacheDir, String mainDex, final List<String> otherDexes) {
+    private boolean isLoadFinish;
+
+    private YauldDex.OnLoadListener mOnLoadListener;
+
+    public YauldDexClassLoader(ClassLoader original, String nativeLibraryPath, final String codeCacheDir, String mainDex, final List<String> otherDexes, YauldDex.OnLoadListener onLoadListener) {
         super(original.getParent());
+        mOnLoadListener = onLoadListener;
+        isLoadFinish = false;
         if(TextUtils.isEmpty(mainDex)){
             String pathBuilder = createDexPath(otherDexes);
             delegateClassLoader = new DelegateClassLoader(pathBuilder, codeCacheDir, nativeLibraryPath, original);
+            onLoadComplete();
         }else {
             delegateClassLoader = new DelegateClassLoader(mainDex, codeCacheDir, nativeLibraryPath, original);
+            YauldDex.debugWithTimeMillis("主Dex加载完成");
             //此处开启新线程来做
-//            otherDexesThread = new Thread() {
-//                @Override
-//                public void run() {
-//                    try {
-//                        YauldDex.installOtherDexes(delegateClassLoader, new File(codeCacheDir), otherDexes);
-//                    } catch (IllegalAccessException e) {
-//                        e.printStackTrace();
-//                    } catch (NoSuchFieldException e) {
-//                        e.printStackTrace();
-//                    } catch (InvocationTargetException e) {
-//                        e.printStackTrace();
-//                    } catch (NoSuchMethodException e) {
-//                        e.printStackTrace();
-//                    } catch (IOException e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            };
-//            otherDexesThread.start();
-            try {
-                YauldDex.installOtherDexes(delegateClassLoader, new File(codeCacheDir), otherDexes);
-            } catch (IllegalAccessException e) {
-                e.printStackTrace();
-            } catch (NoSuchFieldException e) {
-                e.printStackTrace();
-            } catch (InvocationTargetException e) {
-                e.printStackTrace();
-            } catch (NoSuchMethodException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            otherDexesThread = new Thread() {
+                @Override
+                public void run() {
+                    YauldDex.debugWithTimeMillis("开始加载其他的dex");
+                    try {
+                        YauldDex.installOtherDexes(delegateClassLoader, new File(codeCacheDir), otherDexes);
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchFieldException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    } catch (NoSuchMethodException e) {
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    YauldDex.debugWithTimeMillis("其他的dex加载完成");
+                    onLoadComplete();
+                }
+            };
+            otherDexesThread.start();
+        }
+    }
+
+    private void onLoadComplete(){
+        isLoadFinish = true;
+        if(mOnLoadListener != null) {
+            mOnLoadListener.onComplete();
         }
     }
 
@@ -65,6 +70,10 @@ public class YauldDexClassLoader extends ClassLoader {
         } catch (ClassNotFoundException e) {
             throw e;
         }
+    }
+
+    public boolean isLoadFinish() {
+        return isLoadFinish;
     }
 
     private static class DelegateClassLoader extends DexClassLoader {
@@ -109,14 +118,14 @@ public class YauldDexClassLoader extends ClassLoader {
         }
     }
 
-    public static ClassLoader inject(ClassLoader classLoader, String nativeLibraryPath, String codeCacheDir, List<String> dexes) {
-        YauldDexClassLoader yauldDexClassLoader = new YauldDexClassLoader(classLoader, nativeLibraryPath, codeCacheDir, null, dexes);
+    public static YauldDexClassLoader inject(ClassLoader classLoader, String nativeLibraryPath, String codeCacheDir, List<String> dexes) {
+        YauldDexClassLoader yauldDexClassLoader = new YauldDexClassLoader(classLoader, nativeLibraryPath, codeCacheDir, null, dexes, null);
         setParent(classLoader, yauldDexClassLoader);
         return yauldDexClassLoader;
     }
 
-    public static YauldDexClassLoader inject(ClassLoader classLoader, String nativeLibraryPath, String codeCacheDir, String mainDex, List<String> otherDexes) {
-        YauldDexClassLoader yauldDexClassLoader = new YauldDexClassLoader(classLoader, nativeLibraryPath, codeCacheDir, mainDex, otherDexes);
+    public static YauldDexClassLoader inject(ClassLoader classLoader, String nativeLibraryPath, String codeCacheDir, String mainDex, List<String> otherDexes, YauldDex.OnLoadListener onLoadListener) {
+        YauldDexClassLoader yauldDexClassLoader = new YauldDexClassLoader(classLoader, nativeLibraryPath, codeCacheDir, mainDex, otherDexes, onLoadListener);
         setParent(classLoader, yauldDexClassLoader);
         return yauldDexClassLoader;
     }

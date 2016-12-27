@@ -6,6 +6,8 @@ import com.google.common.collect.ImmutableSet
 import com.wanpg.yauld.Command
 import com.wanpg.yauld.ConfigParams
 import com.wanpg.yauld.HotFix
+import com.wanpg.yauld.utils.FileUtils
+import com.wanpg.yauld.utils.ReferenceParser
 import com.wanpg.yauld.utils.Utils
 import org.gradle.api.Project
 import org.zeroturnaround.zip.ZipUtil
@@ -89,7 +91,6 @@ class DexModifyTransform extends Transform {
 
             String dxPath = "${appExtension.sdkDirectory.path}/build-tools/${appExtension.buildToolsVersion}/dx".toString()
 
-            def classIndex = 1
             // 移动原来的class到临时目录
             transformInvocation.inputs.each { inputs ->
                 Utils.print("开始转换directoryInputs")
@@ -126,24 +127,40 @@ class DexModifyTransform extends Transform {
             String tempFolder = HotFix.getTempFolder(project, flavor, buildType)
 //            Command.execute("javac", "${tempFolder}${File.separator}AppInfo.java", "-d", outDir.path)
             Command.execute("javac", "-d", classesFolder.path, "-source", "1.7", "-target", "1.7", "${tempFolder}${File.separator}AppInfo.java")
-
+            boolean isMulitDex = false
             // 编译原APP的代码为main.dex
             if (configParams.main_dex_list) {
+                // 读取maindexlist的list
+                List<String> mainDexList = FileUtils.readFileByLines(project.file(configParams.main_dex_list))
+                if(mainDexList != null && !mainDexList.isEmpty()){
+                    isMulitDex = true
+                    ArrayList<String> classFolderArray = new ArrayList<>()
+                    classFolderArray.add(oldClassesTmpFolder.path)
+                    ReferenceParser referenceParser = new ReferenceParser(mainDexList, classFolderArray)
+
+                    List<String> referenceList = referenceParser.parse()
+                    String mainDexListFilePath = "${tmpFolder.path}/mainDexList.txt"
+                    def formatPackageList2PathList = ReferenceParser.formatPackageList2PathList(referenceList, ".class")
+                    FileUtils.writeFileLines(mainDexListFilePath, formatPackageList2PathList)
+                    Command.execute(dxPath, "--dex", "--output", dexFolder.path,
+                            "--multi-dex",
+                                "--set-max-idx-number=40000",
+                            "--main-dex-list=${mainDexListFilePath}".toString(), "--minimal-main-dex",
+                            oldClassesTmpFolder.path)
+                }
+            }
+
+            if(!isMulitDex){
                 Command.execute(dxPath, "--dex", "--output", dexFolder.path,
                         "--multi-dex",
-//                            "--set-max-idx-number=50000",
-                        "--main-dex-list=${project.file(configParams.main_dex_list).path}".toString(), "--minimal-main-dex",
-                        oldClassesTmpFolder.path)
-            } else {
-                Command.execute(dxPath, "--dex", "--output", dexFolder.path,
-                        "--multi-dex",
-//                            "--set-max-idx-number=50000",
+                            "--set-max-idx-number=40000",
                         oldClassesTmpFolder.path)
             }
 
             // 压缩移动系统编译的Dex 到自己的临时目录
             ZipUtil.pack(dexFolder, new File("${HotFix.getTempFolder(project, flavor, buildType)}/yauld-dex.zip"))
-            tmpFolder.deleteDir()
+//            tmpFolder.deleteDir()
+            oldClassesTmpFolder.deleteDir()
         } else {
             // 这里也要原封不动的拷贝
             transformInvocation.inputs.each { inputs ->

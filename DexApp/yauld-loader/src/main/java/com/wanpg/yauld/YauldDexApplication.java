@@ -24,10 +24,10 @@ public class YauldDexApplication extends Application {
         // 初始化，加载appinfo
         YauldDex.init(base);
         // 解压yuald-dex.zip
-        YauldDex.unZipDex(base);
+        boolean isUnZiped = YauldDex.unZipDex(base);
 
         // 设置classLoader
-        YauldDex.setupClassLoader(base, getClassLoader());
+        YauldDex.setupClassLoader(base, getClassLoader(), isUnZiped);
 
         // 创建真正的Application
         realApplication = YauldDex.createRealApplication();

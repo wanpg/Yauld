@@ -1,6 +1,9 @@
 package com.wanpg.yauld.utils;
 
 import java.io.*;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
 
 /**
  * Created by wangjinpeng on 16/7/27.
@@ -145,6 +148,43 @@ public class FileUtils {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    public static List<String> readFileByLines(String filePath){
+        return readFileByLines(new File(filePath));
+    }
+
+    public static List<String> readFileByLines(File file){
+        HashSet<String> result = new HashSet<>();
+        try {
+            BufferedReader reader = new BufferedReader(new FileReader(file));
+            String lineStr = null;
+            while ((lineStr = reader.readLine()) != null) {
+                result.add(lineStr);
+            }
+            reader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>(result);
+    }
+
+    public static void writeFileLines(String filePath, List<String> lines){
+        writeFileLines(new File(filePath), lines);
+    }
+
+    public static void writeFileLines(File file, List<String> lines){
+        try {
+            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(file));
+            for(String line : lines){
+                bufferedWriter.write(line);
+                bufferedWriter.newLine();
+            }
+            bufferedWriter.flush();
+            bufferedWriter.close();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 }
