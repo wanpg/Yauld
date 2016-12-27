@@ -9,6 +9,6 @@ class HotFix {
 
     static String getTempFolder(Project project, String flavor, String buildType){
 
-        return project.getBuildDir().getPath() + "/intermediates/yauld-temp" +  (flavor ? File.separator + flavor : "") + (buildType ? File.separator + buildType : "")
+        return "${project.getBuildDir().getPath()}${File.separator}intermediates${File.separator}yauld-temp${flavor ? File.separator + flavor : ""}${buildType ? File.separator + buildType : ""}"
     }
 }

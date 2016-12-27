@@ -12,6 +12,7 @@ import com.wanpg.yauld.utils.Utils
 import org.gradle.api.Project
 import org.zeroturnaround.zip.ZipUtil
 
+
 /**
  * Created by wangjinpeng on 2016/12/15.
  */
@@ -82,14 +83,18 @@ class DexModifyTransform extends Transform {
             }
             flavor = taskSuffix.replace(buildType, "")
 
-            File oldClassesTmpFolder = new File("${tmpFolder.path}/classes")
+            File oldClassesTmpFolder = new File("${tmpFolder.path}${File.separator}classes")
 
             oldClassesTmpFolder.mkdirs()
 
-            def dexFolder = transformInvocation.outputProvider.getContentLocation("dex", outputTypes, scopes, Format.DIRECTORY)
+            def dexFolder =
+                    transformInvocation.outputProvider.getContentLocation("dex", outputTypes, scopes, Format.DIRECTORY)
+
+            dexFolder.deleteDir()
             dexFolder.mkdirs()
 
-            String dxPath = "${appExtension.sdkDirectory.path}/build-tools/${appExtension.buildToolsVersion}/dx".toString()
+            def systemName = Utils.getSystemName()
+            String dxPath = "${appExtension.sdkDirectory.path}${File.separator}build-tools${File.separator}${appExtension.buildToolsVersion}${File.separator}dx${"windows" == systemName ? ".bat" : "" }".toString()
 
             // 移动原来的class到临时目录
             transformInvocation.inputs.each { inputs ->
@@ -139,7 +144,7 @@ class DexModifyTransform extends Transform {
                     ReferenceParser referenceParser = new ReferenceParser(mainDexList, classFolderArray)
 
                     List<String> referenceList = referenceParser.parse()
-                    String mainDexListFilePath = "${tmpFolder.path}/mainDexList.txt"
+                    String mainDexListFilePath = "${tmpFolder.path}${File.separator}mainDexList.txt"
                     def formatPackageList2PathList = ReferenceParser.formatPackageList2PathList(referenceList, ".class")
                     FileUtils.writeFileLines(mainDexListFilePath, formatPackageList2PathList)
                     Command.execute(dxPath, "--dex", "--output", dexFolder.path,
@@ -158,7 +163,7 @@ class DexModifyTransform extends Transform {
             }
 
             // 压缩移动系统编译的Dex 到自己的临时目录
-            ZipUtil.pack(dexFolder, new File("${HotFix.getTempFolder(project, flavor, buildType)}/yauld-dex.zip"))
+            ZipUtil.pack(dexFolder, new File(HotFix.getTempFolder(project, flavor, buildType), "yauld-dex.zip"))
 //            tmpFolder.deleteDir()
             oldClassesTmpFolder.deleteDir()
         } else {

@@ -186,4 +186,19 @@ public class Utils {
             }
         }
     }
+
+    public static String getSystemName(){
+        String osName = System.getProperty("os.name");
+        if(osName != null){
+            String lowerCase = osName.toLowerCase();
+            if(lowerCase.contains("mac")){
+                return "mac";
+            }else if(lowerCase.contains("windows")){
+                return "windows";
+            }else if(lowerCase.contains("linux")){
+                return "linux";
+            }
+        }
+        return "";
+    }
 }

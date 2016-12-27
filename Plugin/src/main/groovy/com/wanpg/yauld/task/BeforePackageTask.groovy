@@ -25,7 +25,7 @@ class BeforePackageTask extends BaseTask{
         }
 
         String tmpFolder = HotFix.getTempFolder(project, flavor, buildType)
-        File dexZip = new File("${tmpFolder}/yauld-dex.zip")
+        File dexZip = new File("${tmpFolder}${File.separator}yauld-dex.zip")
         if(dexZip.exists()) {
             def sources = new ZipEntrySource[1]
             sources[0] = new FileSource("yauld-dex.zip", dexZip)

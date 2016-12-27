@@ -1,4 +1,4 @@
-package com.wanpg.yauld;
+package com.wanpg.yauld.utils;
 
 import java.io.File;
 import java.io.FileInputStream;

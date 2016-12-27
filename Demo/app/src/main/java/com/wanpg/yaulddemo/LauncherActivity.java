@@ -22,15 +22,12 @@ public class LauncherActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                boolean isLoad = YauldDex.isLoadFinished(new YauldDex.OnLoadListener() {
+                YauldDex.isLoadFinished(new YauldDex.OnLoadListener() {
                     @Override
                     public void onComplete() {
                         toMainActivity();
                     }
                 });
-                if(isLoad) {
-                    toMainActivity();
-                }
             }
         }, 2000);
     }

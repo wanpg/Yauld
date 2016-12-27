@@ -1,7 +1,8 @@
-package com.wanpg.yauld;
+package com.wanpg.yauld.utils;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.lang.reflect.Method;
 import java.security.MessageDigest;
 
 /**
@@ -21,7 +22,7 @@ public class Utils {
         return sb.toString();
     }
 
-    public static String md5sum(String filename) {
+    public static String md5File(String filename) {
         InputStream fis;
         byte[] buffer = new byte[1024];
         int numRead = 0;
@@ -37,6 +38,16 @@ public class Utils {
         } catch (Exception e) {
             System.out.println("error");
             return null;
+        }
+    }
+
+    public static void invokeMethod(Class<?> clazz, String methodName, Class<?> paramType, Object object, Object value) {
+        try {
+            Object localObject = clazz.getDeclaredMethod(methodName, paramType);
+            ((Method) localObject).setAccessible(true);
+            ((Method) localObject).invoke(object, value);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

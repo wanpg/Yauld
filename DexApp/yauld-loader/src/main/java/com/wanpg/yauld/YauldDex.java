@@ -6,7 +6,10 @@ import android.content.SharedPreferences;
 import android.os.Build;
 import android.util.Log;
 
+import com.wanpg.yauld.utils.FileUtils;
+
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.ref.WeakReference;
@@ -14,12 +17,13 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.nio.channels.FileChannel;
+import java.nio.channels.FileLock;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -28,6 +32,10 @@ import java.util.zip.ZipFile;
  */
 
 public class YauldDex {
+
+    private static final String TAG = YauldDex.class.getSimpleName();
+    private static final String YAULD_DEX_ZIP_NAME = "yauld-dex.zip";
+    private static final String YAULD_SP_NAME = "yauld_sp";
 
     public interface OnLoadListener {
         void onComplete();
@@ -44,28 +52,96 @@ public class YauldDex {
         return false;
     }
 
-    public static boolean isLoadFinished(OnLoadListener onLoadListener) {
-        boolean loadFinished = isLoadFinished();
-        if (!loadFinished) {
+    public static void isLoadFinished(OnLoadListener onLoadListener) {
+        if(onLoadListener == null){
+            return;
+        }
+        if(isLoadFinished()){
+            onLoadListener.onComplete();
+        }else{
             if (!loadListenerArray.contains(onLoadListener)) {
                 loadListenerArray.add(onLoadListener);
             }
         }
-        return loadFinished;
     }
 
     static void debug(String info) {
-        Log.d("yauld", info);
+        Log.d(TAG, info);
     }
 
     static void debugWithTimeMillis(String info) {
-        Log.d("yauld", System.currentTimeMillis() + "--:--" + info);
+        debug(System.currentTimeMillis() + "--:--" + info);
     }
 
-    static final String YAULD_DEX_ZIP_NAME = "yauld-dex.zip";
-    private static final String YAULD_SP_NAME = "yauld_sp";
+    FileChannel fileChannel = null;
+    FileLock fileLock = null;
+    /**
+     * 动态加载所有的dex
+     * @param context
+     */
+    synchronized void install(final Application context) {
+        // 获得文件锁，保证多进程时解压部分代码只进行一次操作
+        FileUtils.mkdirs(getYauldFolder(context));
+        File file = new File(getYauldFolder(context), "lock.txt");
+        if(!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-    static void init(Context context) {
+        if(!getFileLocked(file.getAbsolutePath())){
+            return;
+        }
+
+        // 解压yuald-dex.zip
+        boolean isUnZiped = unZipDex(context);
+        // 设置classLoader
+        setupClassLoader(context, context.getClassLoader(), isUnZiped, new OnLoadListener() {
+            @Override
+            public void onComplete() {
+                releaseLock();
+                for (OnLoadListener onLoadListener : loadListenerArray) {
+                    if (onLoadListener != null) {
+                        onLoadListener.onComplete();
+                    }
+                }
+                loadListenerArray.clear();
+            }
+        });
+    }
+
+    private synchronized boolean getFileLocked(String filePath){
+        boolean isLockSuccess;
+        try {
+            fileChannel = new FileOutputStream(filePath).getChannel();
+            while (fileLock == null){
+                fileLock = fileChannel.tryLock();
+            }
+            isLockSuccess = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            isLockSuccess = false;
+        }
+        return isLockSuccess;
+    }
+
+    private synchronized void releaseLock(){
+        if(fileLock != null){
+            try {
+                fileLock.release();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        if(fileChannel != null){
+            try {
+                fileChannel.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private static String getDexFolder(Context context) {
@@ -81,39 +157,12 @@ public class YauldDex {
         return context.getFilesDir().getPath() + File.separator + "yauld";
     }
 
-    static void invokeMethod(Class<?> clazz, String methodName, Class<?> paramType, Object object, Object value) {
-        try {
-            Object localObject = clazz.getDeclaredMethod(methodName, paramType);
-            ((Method) localObject).setAccessible(true);
-            ((Method) localObject).invoke(object, value);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    static Application createRealApplication() {
-        Application realApplication = null;
-        try {
-            Class<?> aClass = Class.forName(AppInfo.APPLICATION_NAME);
-            if (aClass != null) {
-                realApplication = (Application) aClass.getConstructor(new Class[0]).newInstance();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (realApplication == null) {
-            realApplication = new Application();
-        }
-        return realApplication;
-    }
-
     /**
-     * 是否做了解压
-     *
+     * 解压app运行的dex
      * @param context
-     * @return
+     * @return 是否做了解压操作，做了这个操作，需要异步执行任务
      */
-    static boolean unZipDex(Context context) {
+    private boolean unZipDex(Context context) {
         boolean isUnZiped = false;
         try {
             YauldDex.debugWithTimeMillis("----------------unZipDex---A");
@@ -179,12 +228,12 @@ public class YauldDex {
         return isUnZiped;
     }
 
-    public static long currentFileModifyTimeMillis(){
+    private static long currentFileModifyTimeMillis(){
         long l = System.currentTimeMillis() / 1000;
         return l * 1000;
     }
 
-    private static boolean isDexModify(Context context, File dexFolder) {
+    private boolean isDexModify(Context context, File dexFolder) {
         if (dexFolder == null) {
             return true;
         }
@@ -205,51 +254,31 @@ public class YauldDex {
         return false;
     }
 
-    static long getYauldDexZipModify(Context context){
+    private static long getYauldDexZipModify(Context context){
         return getSharePreferences(context).getLong("yauld-dex-zip-modify", System.currentTimeMillis());
     }
 
-    static boolean setYauldDexZipModify(Context context, long modify){
+    private static boolean setYauldDexZipModify(Context context, long modify){
         SharedPreferences.Editor editor = getSharePreferences(context).edit();
         editor.putLong("yauld-dex-zip-modify", modify);
         return editor.commit();
     }
 
-    static long getYauldDexFileModify(Context context){
+    private static long getYauldDexFileModify(Context context){
         return getSharePreferences(context).getLong("yauld-dex-file-modify", System.currentTimeMillis());
     }
 
-    static boolean setYauldDexFileModify(Context context, long modify){
+    private static boolean setYauldDexFileModify(Context context, long modify){
         SharedPreferences.Editor editor = getSharePreferences(context).edit();
         editor.putLong("yauld-dex-file-modify", modify);
         return editor.commit();
     }
 
-    static String getYauldDexZipMd5(Context context) {
-        return getSharePreferences(context).getString("yauld-dex-zip-md5", null);
-    }
-
-    static boolean setYauldDexZipMd5(Context context, String md5) {
-        SharedPreferences.Editor editor = getSharePreferences(context).edit();
-        editor.putString("yauld-dex-zip-md5", md5);
-        return editor.commit();
-    }
-
-    static Set<String> getYauldDexFolderMd5(Context context) {
-        return getSharePreferences(context).getStringSet("yauld-dex-folder-md5", null);
-    }
-
-    static boolean setYauldDexFolderMd5(Context context, Set<String> md5Set) {
-        SharedPreferences.Editor editor = getSharePreferences(context).edit();
-        editor.putStringSet("yauld-dex-folder-md5", md5Set);
-        return editor.commit();
-    }
-
-    static SharedPreferences getSharePreferences(Context context) {
+    private static SharedPreferences getSharePreferences(Context context) {
         return context.getSharedPreferences(YAULD_SP_NAME, Context.MODE_PRIVATE);
     }
 
-    static void setupClassLoader(Context contextBase, ClassLoader classLoader, boolean async) {
+    private void setupClassLoader(Context contextBase, ClassLoader classLoader, boolean async, OnLoadListener loadListener) {
         String nativeLibraryPath = "";
 
         try {
@@ -280,27 +309,14 @@ public class YauldDex {
 
         YauldDex.debugWithTimeMillis("----------------setupClassLoader---A---");
         if(async) {
-            yauldDexClassLoader = YauldDexClassLoader.inject(classLoader, nativeLibraryPath, dexOptFolderPath, mainDexFilePath, dexList, new OnLoadListener() {
-                @Override
-                public void onComplete() {
-                    for (OnLoadListener onLoadListener : loadListenerArray) {
-                        if (onLoadListener != null) {
-                            onLoadListener.onComplete();
-                        }
-                    }
-                    loadListenerArray.clear();
-                }
-            });
+            yauldDexClassLoader = YauldDexClassLoader.inject(classLoader, nativeLibraryPath, dexOptFolderPath, mainDexFilePath, dexList, loadListener);
             YauldDex.debug("----------------setupClassLoader---B---");
         }else {
             yauldDexClassLoader = YauldDexClassLoader.inject(classLoader, nativeLibraryPath, dexOptFolderPath, dexList);
             YauldDex.debug("----------------setupClassLoader---C---");
-            for (OnLoadListener onLoadListener : loadListenerArray) {
-                if (onLoadListener != null) {
-                    onLoadListener.onComplete();
-                }
+            if(loadListener != null){
+                loadListener.onComplete();
             }
-            loadListenerArray.clear();
         }
     }
 
@@ -393,9 +409,6 @@ public class YauldDex {
             }
         }
     }
-
-    static final String TAG = YauldDex.class.getSimpleName();
-
 
     /**
      * Installer for platform versions 14, 15, 16, 17 and 18.

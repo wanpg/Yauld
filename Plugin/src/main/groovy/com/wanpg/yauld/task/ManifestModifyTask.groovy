@@ -44,7 +44,7 @@ class ManifestModifyTask extends BaseTask {
             applicationId = manifestElement.getAttribute("package")
             Utils.print("应用的applicationId --->> " + applicationId)
 
-            Element applicationElement = (Element) manifestElement.getElementsByTagName("application").item(0);
+            Element applicationElement = (Element) manifestElement.getElementsByTagName("application").item(0)
 
             applicationName = applicationElement.getAttribute("android:name")
             Utils.print("应用的原applicationName ---->> " + applicationName)
@@ -67,7 +67,7 @@ class ManifestModifyTask extends BaseTask {
             String tempFolder = HotFix.getTempFolder(project, flavor, buildType)
             Utils.print("临时目录:${tempFolder}")
             FileUtils.mkdirs(tempFolder)
-            String appInfoProperty = tempFolder + File.separator + "AppInfo.java"
+            String appInfoProperty = "${tempFolder}${File.separator}AppInfo.java".toString()
 
             def replace = AppInfoClass.replace("{APPLICATION_ID}", applicationId)
                     .replace("{APPLICATION_NAME}", applicationName)
