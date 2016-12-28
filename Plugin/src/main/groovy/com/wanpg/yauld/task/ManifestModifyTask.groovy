@@ -12,7 +12,7 @@ import javax.xml.parsers.DocumentBuilderFactory
 import javax.xml.transform.Transformer
 import javax.xml.transform.TransformerFactory
 import javax.xml.transform.dom.DOMSource
-import javax.xml.transform.stream.StreamResult;
+import javax.xml.transform.stream.StreamResult
 
 /**
  * Created by wangjinpeng on 2016/12/14.
@@ -24,6 +24,7 @@ class ManifestModifyTask extends BaseTask {
             "public class AppInfo {\n" +
             "    public static String APPLICATION_ID = \"{APPLICATION_ID}\";\n" +
             "    public static String APPLICATION_NAME = \"{APPLICATION_NAME}\";\n" +
+            "    public static String VERSION = \"{VERSION}\";\n" +
             "}"
 
 
@@ -71,6 +72,7 @@ class ManifestModifyTask extends BaseTask {
 
             def replace = AppInfoClass.replace("{APPLICATION_ID}", applicationId)
                     .replace("{APPLICATION_NAME}", applicationName)
+                    .replace("{VERSION}", configParams.version)
             Utils.writeToFile(appInfoProperty, replace)
         }
     }

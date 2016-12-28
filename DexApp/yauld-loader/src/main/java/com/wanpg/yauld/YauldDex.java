@@ -35,35 +35,8 @@ public class YauldDex {
 
     private static final String TAG = YauldDex.class.getSimpleName();
     private static final String YAULD_DEX_ZIP_NAME = "yauld-dex.zip";
+    private static final String YAULD_UPDATE_ZIP_NAME = "yauld-update.zip";
     private static final String YAULD_SP_NAME = "yauld_sp";
-
-    public interface OnLoadListener {
-        void onComplete();
-    }
-
-    private static YauldDexClassLoader yauldDexClassLoader;
-
-    private static final ArrayList<OnLoadListener> loadListenerArray = new ArrayList<>();
-
-    public static boolean isLoadFinished() {
-        if (yauldDexClassLoader != null && yauldDexClassLoader.isLoadFinish()) {
-            return true;
-        }
-        return false;
-    }
-
-    public static void isLoadFinished(OnLoadListener onLoadListener) {
-        if(onLoadListener == null){
-            return;
-        }
-        if(isLoadFinished()){
-            onLoadListener.onComplete();
-        }else{
-            if (!loadListenerArray.contains(onLoadListener)) {
-                loadListenerArray.add(onLoadListener);
-            }
-        }
-    }
 
     static void debug(String info) {
         Log.d(TAG, info);
@@ -90,26 +63,15 @@ public class YauldDex {
                 e.printStackTrace();
             }
         }
-
         if(!getFileLocked(file.getAbsolutePath())){
             return;
         }
-
-        // 解压yuald-dex.zip
-        boolean isUnZiped = unZipDex(context);
-        // 设置classLoader
-        setupClassLoader(context, context.getClassLoader(), isUnZiped, new OnLoadListener() {
-            @Override
-            public void onComplete() {
-                releaseLock();
-                for (OnLoadListener onLoadListener : loadListenerArray) {
-                    if (onLoadListener != null) {
-                        onLoadListener.onComplete();
-                    }
-                }
-                loadListenerArray.clear();
-            }
-        });
+        //检查是否有更新文件
+        if(checkUpdate(context)){
+            // 设置classLoader
+            setupClassLoader(context, context.getClassLoader());
+        }
+        releaseLock();
     }
 
     private synchronized boolean getFileLocked(String filePath){
@@ -157,167 +119,85 @@ public class YauldDex {
         return context.getFilesDir().getPath() + File.separator + "yauld";
     }
 
-    /**
-     * 解压app运行的dex
-     * @param context
-     * @return 是否做了解压操作，做了这个操作，需要异步执行任务
-     */
-    private boolean unZipDex(Context context) {
-        boolean isUnZiped = false;
+    private boolean checkUpdate(Context context){
+        String yauldFolder = getYauldFolder(context);
+        if(!FileUtils.exists(yauldFolder)){
+            return false;
+        }
+        File file = new File(yauldFolder, YAULD_UPDATE_ZIP_NAME);
+        if(!file.exists()){
+            return false;
+        }
         try {
-            YauldDex.debugWithTimeMillis("----------------unZipDex---A");
-            long dexZipModify = getYauldDexZipModify(context);
-            YauldDex.debugWithTimeMillis("----------------unZipDex---B");
-            String yauldFolder = getYauldFolder(context);
-
-            if (!FileUtils.exists(yauldFolder)) {
-                isUnZiped = true;
-                FileUtils.mkdirs(yauldFolder);
-            }
-
-            File dexZipFile = new File(yauldFolder, YAULD_DEX_ZIP_NAME);
-            boolean isNewZip = false;
-            debug("上一次的dexzip modify：" + dexZipFile.lastModified());
-            debug("上一次保存的dexzip modify：" + dexZipModify);
-            if (!dexZipFile.exists() || dexZipFile.lastModified() != dexZipModify) {
-                // 进行解压操作
-                ZipFile apkFile = new ZipFile(context.getApplicationInfo().sourceDir);
-                Enumeration<? extends ZipEntry> entries = apkFile.entries();
-                while (entries.hasMoreElements()) {
-                    ZipEntry zipEntry = entries.nextElement();
-                    String zipEntryName = zipEntry.getName();
-                    if (YAULD_DEX_ZIP_NAME.equals(zipEntryName)) {
-                        InputStream inputStream = apkFile.getInputStream(zipEntry);
-                        YauldDex.debugWithTimeMillis("----------------unZipDex---C");
-                        FileUtils.copyStream(inputStream, yauldFolder, YAULD_DEX_ZIP_NAME);
-                        YauldDex.debugWithTimeMillis("----------------unZipDex---D");
-                        isNewZip = true;
-                        break;
-                    }
-                }
-                apkFile.close();
-                long currentTimeMillis = currentFileModifyTimeMillis();
-                debug("zip设置存储时间：" + dexZipFile.setLastModified(currentTimeMillis) + "   " + currentTimeMillis);
-                setYauldDexZipModify(context, currentTimeMillis);
-                YauldDex.debugWithTimeMillis("----------------unZipDex---E");
-            }
-
-            File dexFolder = new File(getDexFolder(context));
-            if (isNewZip || !dexFolder.exists() || isDexModify(context, dexFolder)) {
-                YauldDex.debugWithTimeMillis("----------------unZipDex---F");
-
-                if (!dexFolder.exists()) {
-                    dexFolder.mkdirs();
-                } else {
-                    FileUtils.delete(dexFolder, false);
-                }
-                FileUtils.unZipFiles(dexZipFile, dexFolder.getAbsolutePath());
-                isUnZiped = true;
-
-                long currentTimeMillis = currentFileModifyTimeMillis();
-                File[] listFiles = dexFolder.listFiles();
-                for (File file : listFiles) {
-                    debug("dexfile设置存储时间：" + file.setLastModified(currentTimeMillis) + "   " + currentTimeMillis);
-                }
-                setYauldDexFileModify(context, currentTimeMillis);
-                YauldDex.debugWithTimeMillis("----------------unZipDex---G");
-            }
+            File updateFolder = new File(yauldFolder, "update");
+            FileUtils.delete(updateFolder, true);
+            FileUtils.unZipFiles(file, updateFolder.getAbsolutePath());
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return isUnZiped;
-    }
-
-    private static long currentFileModifyTimeMillis(){
-        long l = System.currentTimeMillis() / 1000;
-        return l * 1000;
-    }
-
-    private boolean isDexModify(Context context, File dexFolder) {
-        if (dexFolder == null) {
-            return true;
-        }
-        if (dexFolder.isFile()) {
-            dexFolder.delete();
-            return true;
-        }
-        File[] files = dexFolder.listFiles();
-        if (files == null || files.length <= 0) {
-            return true;
-        }
-        long yauldDexFileModify = getYauldDexFileModify(context);
-        for (File file : files) {
-            if(file.lastModified() != yauldDexFileModify){
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private static long getYauldDexZipModify(Context context){
-        return getSharePreferences(context).getLong("yauld-dex-zip-modify", System.currentTimeMillis());
-    }
-
-    private static boolean setYauldDexZipModify(Context context, long modify){
-        SharedPreferences.Editor editor = getSharePreferences(context).edit();
-        editor.putLong("yauld-dex-zip-modify", modify);
-        return editor.commit();
-    }
-
-    private static long getYauldDexFileModify(Context context){
-        return getSharePreferences(context).getLong("yauld-dex-file-modify", System.currentTimeMillis());
-    }
-
-    private static boolean setYauldDexFileModify(Context context, long modify){
-        SharedPreferences.Editor editor = getSharePreferences(context).edit();
-        editor.putLong("yauld-dex-file-modify", modify);
-        return editor.commit();
+        return true;
     }
 
     private static SharedPreferences getSharePreferences(Context context) {
         return context.getSharedPreferences(YAULD_SP_NAME, Context.MODE_PRIVATE);
     }
 
-    private void setupClassLoader(Context contextBase, ClassLoader classLoader, boolean async, OnLoadListener loadListener) {
-        String nativeLibraryPath = "";
+    private void setupClassLoader(Context context, ClassLoader classLoader) {
+        String yauldFolder = getYauldFolder(context);
+        File uploadDexFolder = new File(yauldFolder, "update/dex");
+        if(!uploadDexFolder.exists()){
+            return;
+        }
 
+        ArrayList<String> dexList = new ArrayList<>();
+        File[] files = uploadDexFolder.listFiles();
+        for (File dexFile : files) {
+            if(dexFile.getName().endsWith(".dex")) {
+                dexList.add(dexFile.getAbsolutePath());
+            }
+        }
+
+        if(dexList.isEmpty()){
+            return;
+        }
+
+        String nativeLibraryPath = "";
         try {
             nativeLibraryPath = (String) classLoader.getClass().getMethod("getLdLibraryPath", new Class[0]).invoke(classLoader);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        String dexOptFolderPath = getDexOptFolder(contextBase);
-        String dexFolder = getDexFolder(contextBase);
-
-        String mainDexFilePath = null;
-        ArrayList<String> dexList = new ArrayList<>();
-        File[] files = new File(dexFolder).listFiles();
-        for (File dexFile : files) {
-            String dexFileName = dexFile.getName();
-            String dexFilePath = dexFile.getAbsolutePath();
-            if ("classes.dex".equals(dexFileName) && async) {
-                mainDexFilePath = dexFilePath;
-            } else {
-                dexList.add(dexFilePath);
-            }
-        }
-
+        String dexOptFolderPath = getDexOptFolder(context);
         if (!FileUtils.exists(dexOptFolderPath)) {
             FileUtils.mkdirs(dexOptFolderPath);
         }
 
         YauldDex.debugWithTimeMillis("----------------setupClassLoader---A---");
-        if(async) {
-            yauldDexClassLoader = YauldDexClassLoader.inject(classLoader, nativeLibraryPath, dexOptFolderPath, mainDexFilePath, dexList, loadListener);
-            YauldDex.debug("----------------setupClassLoader---B---");
-        }else {
-            yauldDexClassLoader = YauldDexClassLoader.inject(classLoader, nativeLibraryPath, dexOptFolderPath, dexList);
-            YauldDex.debug("----------------setupClassLoader---C---");
-            if(loadListener != null){
-                loadListener.onComplete();
+        YauldDexClassLoader yauldDexClassLoader = new YauldDexClassLoader(classLoader, nativeLibraryPath, dexOptFolderPath, dexList);
+        try {
+            Class<?> aClass = yauldDexClassLoader.loadClass(AppInfo.class.getName());
+            if(aClass != null){
+                Field declaredField = aClass.getDeclaredField("VERSION");
+                if(declaredField != null){
+                    Object versionValue = declaredField.get(aClass);
+                    if(!AppInfo.VERSION.equals(versionValue)){
+                        YauldDexClassLoader.setParent(classLoader, yauldDexClassLoader);
+                        AppInfo.VERSION = versionValue.toString();
+                        YauldDex.debugWithTimeMillis("----------------setupClassLoader---B---");
+                        return;
+                    }
+                }
             }
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
         }
+        yauldDexClassLoader = null;
+        YauldDex.debugWithTimeMillis("----------------setupClassLoader---C---");
     }
 
     static void monkeyPatchApplication(Context context, Application bootstrap, Application realApplication, String externalResourceFile) {

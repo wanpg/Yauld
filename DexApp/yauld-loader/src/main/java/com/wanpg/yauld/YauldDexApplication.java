@@ -6,17 +6,14 @@ import android.app.Application;
 import android.content.ComponentCallbacks;
 import android.content.Context;
 import android.content.ContextWrapper;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
 import com.wanpg.yauld.utils.Utils;
 
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by wangjinpeng on 2016/12/10.
@@ -66,60 +63,7 @@ public class YauldDexApplication extends Application {
         YauldDex.monkeyPatchApplication(this, this, this.realApplication, null);
         super.onCreate();
         mainThreadName = Thread.currentThread().getName();
-        String processName = getProcessName(this, android.os.Process.myPid());
-
         this.realApplication.onCreate();
-        if(processName != null){
-            boolean defaultProcess = processName.equals(getPackageName());
-            if(defaultProcess){
-                //当前应用的初始化
-                // 此处做interface的处理
-                YauldDex.isLoadFinished(new YauldDex.OnLoadListener() {
-                    @Override
-                    public void onComplete() {
-                        invokeInterfaceForApp();
-                    }
-                });
-            }
-        }
-    }
-
-    private void invokeInterfaceForApp(){
-        runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                ApplicationInfo appInfo = null;
-                try {
-                    appInfo = getPackageManager().getApplicationInfo(getPackageName(), PackageManager.GET_META_DATA);
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-                if(appInfo != null) {
-                    Bundle metaData = appInfo.metaData;
-                    if(metaData != null) {
-                        Set<String> strings = metaData.keySet();
-                        if(strings != null && !strings.isEmpty()) {
-                            for (String name : strings) {
-                                Object value = metaData.get(name);
-                                if ("YauldInterface".equals(value)) {
-                                    try {
-                                        Class<?> aClass = Class.forName(name);
-                                        if (aClass != null) {
-                                            Object o = aClass.getConstructor().newInstance();
-                                            if (o instanceof YauldInterface) {
-                                                ((YauldInterface) o).onInitialize(realApplication);
-                                            }
-                                        }
-                                    } catch (Exception e) {
-                                        e.printStackTrace();
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        });
     }
 
     @Override

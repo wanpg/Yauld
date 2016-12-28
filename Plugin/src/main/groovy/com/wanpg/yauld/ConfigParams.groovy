@@ -15,4 +15,10 @@ class ConfigParams {
      * 如果是false 按照安卓原有的打包方式进行build
      */
     boolean build_enable
+
+    /**
+     * 当前的代码和资源版本，区分与android 中的versioncode
+     * 这个只代表dex和res的版本
+     */
+    String version
 }

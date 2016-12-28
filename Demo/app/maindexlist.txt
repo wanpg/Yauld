@@ -1,2 +1,0 @@
-com.wanpg.yaulddemo.DemoApplication
-com.wanpg.yaulddemo.LauncherActivity

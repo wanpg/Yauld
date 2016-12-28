@@ -73,11 +73,11 @@ public class FileUtils {
      * 解压文件到指定目录
      *
      * @param zipFile
-     * @param descDir
+     * @param destDir
      * @author isea533
      */
-    public static void unZipFiles(File zipFile, String descDir) throws IOException {
-        File pathFile = new File(descDir);
+    public static void unZipFiles(File zipFile, String destDir) throws IOException {
+        File pathFile = new File(destDir);
         if (!pathFile.exists()) {
             pathFile.mkdirs();
         }
@@ -86,7 +86,7 @@ public class FileUtils {
             ZipEntry entry = (ZipEntry) entries.nextElement();
             String zipEntryName = entry.getName();
             InputStream in = zip.getInputStream(entry);
-            String outPath = ((descDir.endsWith(File.separator) ? descDir : (descDir + File.separator)) + zipEntryName).replaceAll("\\*", "/");
+            String outPath = ((destDir.endsWith(File.separator) ? destDir : (destDir + File.separator)) + zipEntryName).replaceAll("\\*", "/");
             //判断路径是否存在,不存在则创建文件路径
             File file = new File(outPath.substring(0, outPath.lastIndexOf('/')));
             if (!file.exists()) {

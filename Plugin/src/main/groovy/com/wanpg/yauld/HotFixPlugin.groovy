@@ -66,10 +66,10 @@ class HotFixPlugin implements Plugin<Project> {
                     variantOutput.processResources.dependsOn manifestModifyTask
 
                     // 修改资源，将AppInfo.properties 和 打包的dex 打入 resource.zip
-                    def beforePackageTask = project.tasks.create("yauldModify${variantName}ResBeforePackage", BeforePackageTask)
-                    myTasks.add(beforePackageTask)
-                    beforePackageTask.resourcesPackOutPath = variantOutput.packageApplication.resourceFile.path
-                    variantOutput.packageApplication.dependsOn beforePackageTask
+//                    def beforePackageTask = project.tasks.create("yauldModify${variantName}ResBeforePackage", BeforePackageTask)
+//                    myTasks.add(beforePackageTask)
+//                    beforePackageTask.resourcesPackOutPath = variantOutput.packageApplication.resourceFile.path
+//                    variantOutput.packageApplication.dependsOn beforePackageTask
 
                     // 为自己的task赋值
                     myTasks.each { baseTask ->
