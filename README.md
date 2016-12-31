@@ -4,9 +4,7 @@ Android HotFix Plug-in
 ####  1. 补丁包文件结构
 ```
 update.zip
-	-- dex
-		-- patch1.dex
-		-- ...
+	-- patch.dex
 	-- resource
 		-- assets
 		-- res
@@ -41,7 +39,10 @@ update.zip
 8. 拷贝apk内部的res及assets到 yauld/resource目录
 9. 根据assets.change和res.change移除无用资源
 10. 补丁包中assets和res移动到yauld/resource中替换相应资源
-11. 代码替换AssetManager中的路径指向yauld/resource/resources.arsc
+11. 将当前生成的yauld/resource文件夹打包压缩为yauld/update/resource.zip
+12. 根据AppInfo.APPLICATION_NAME字段创建RealApplication
+13. 调用RealApplication.attachBaseContext
+14. 在YauldDexApplication的onCreate的首行，调用YauldDex.monkeyPatchApplication，替换所有需要替换application为RealApplication，替换资源管理器指向地址为yauld/update/resource.zip
 ```
 #### 5. 手机空间目录结构
 
@@ -50,9 +51,7 @@ update.zip
 	-- yauld
 		-- update.zip  # 更新下载下来的zip包
 		-- update_temp # 更新解压的临时目录
-			-- dex
-                -- patch1.dex
-                -- ...
+        	-- patch.dex
             -- resource
                 -- assets
                 -- res
@@ -60,13 +59,14 @@ update.zip
             -- assets.change
             -- res.change
 		-- update # 更新所有数据处理结束后的目录
-			-- dex
-				-- patch1.dex
-				-- ...
-			-- resources.zip #由apk资源的临时目录 压缩得来
-		-- resource # apk资源的临时目录
+			-- patch.dex
+			-- resources.zip #由apk资源的临时目录压缩得来
+		-- resource # apk资源的临时目录，在压缩为 update/resources.zip 后会被删除
 			-- assets
 			-- res
 			-- resources.arsc #会根据update_temp/resources.arsc.patch 做一次二进制合并
 ```
 
+#### 6. 注意事项
+
+* `patch.dex`，apk差分工具只能生成一个dex的patch包，这就限制了热更新改动的代码不要超越65536个方法数的限制（不是不能做，如果改动非常大，建议直接apk升级）

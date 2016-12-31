@@ -158,18 +158,13 @@ public class YauldDex {
     }
 
     private boolean setupClassLoader(Context context, ClassLoader classLoader) {
-        File uploadDexFolder = new File(getYauldUpdateFolder(context), "dex");
-        if (!uploadDexFolder.exists()) {
+        File updateDexFile = new File(getYauldUpdateFolder(context), "patch.dex");
+        if (!updateDexFile.exists()) {
             return false;
         }
 
         ArrayList<String> dexList = new ArrayList<>();
-        File[] files = uploadDexFolder.listFiles();
-        for (File dexFile : files) {
-            if (dexFile.getName().endsWith(".dex")) {
-                dexList.add(dexFile.getAbsolutePath());
-            }
-        }
+        dexList.add(updateDexFile.getAbsolutePath());
 
         if (dexList.isEmpty()) {
             return false;

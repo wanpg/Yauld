@@ -24,11 +24,14 @@ import java.util.List;
 public class DexPatcher {
 
     public static boolean patch(Context context, String updateTempFolderPath, String updateFolderPath){
-        File updateTempDexFolder = new File(updateTempFolderPath, "dex");
-        if(updateTempDexFolder.exists()) {
+        File updateTempDexFile = new File(updateTempFolderPath, "patch.dex");
+        if(updateTempDexFile.exists()) {
             File updateFolder = new File(updateFolderPath);
+            if(!updateFolder.exists()){
+                updateFolder.mkdirs();
+            }
             // 移动
-            FileUtils.copy(updateTempDexFolder, updateFolder);
+            FileUtils.copyFile(updateTempDexFile, updateFolder, "patch.dex");
             return true;
         }
         return false;

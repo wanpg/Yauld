@@ -47,3 +47,6 @@ proguard/
 
 #过滤仓库文件
 repo/
+
+#过滤临时文件
+temp/
