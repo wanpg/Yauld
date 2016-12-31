@@ -23,7 +23,6 @@ class DexModifyTransform extends Transform {
     Project project
     AppExtension appExtension
 
-
     DexModifyTransform(Project project, AppExtension appExtension) {
         this.project = project
         this.appExtension = appExtension
@@ -60,9 +59,12 @@ class DexModifyTransform extends Transform {
     }
 
     @Override
-    void transform(TransformInvocation transformInvocation) throws TransformException, InterruptedException, IOException {
+    void transform(TransformInvocation transformInvocation)
+            throws TransformException, InterruptedException, IOException {
+
         configParams = project.extensions.findByType(ConfigParams.class)
-        def classesFolder = transformInvocation.outputProvider.getContentLocation("classes", outputTypes, scopes, Format.DIRECTORY)
+        def classesFolder =
+                transformInvocation.outputProvider.getContentLocation("classes", outputTypes, scopes, Format.DIRECTORY)
 
         classesFolder.deleteDir()
         classesFolder.mkdirs()
@@ -72,7 +74,7 @@ class DexModifyTransform extends Transform {
             inputs.directoryInputs.each { directoryInput ->
                 int pathBitLen = directoryInput.file.toString().length()
                 directoryInput.file.traverse { fileInput ->
-                    def path = "${fileInput.toString().substring(pathBitLen)}"
+                    def path = fileInput.toString().substring(pathBitLen)
                     if (fileInput.isDirectory()) {
                         new File(classesFolder, path).mkdirs()
                     } else {
@@ -83,6 +85,11 @@ class DexModifyTransform extends Transform {
 
             inputs.jarInputs.each { jarInput ->
                 if (jarInput.file.isFile()) {
+//                    if (configParams.build_enable && jarInput.file.path.contains("com.wanpg.yauld") && jarInput.file.path.contains("hotfix-loader")) {
+//                        ZipUtil.unpack(jarInput.file, classesFolder)
+//                    }else{
+//                        new File(classesFolder, "${jarInput.name}.jar").bytes = jarInput.file.bytes
+//                    }
                     ZipUtil.unpack(jarInput.file, classesFolder)
                 }
             }
@@ -100,7 +107,9 @@ class DexModifyTransform extends Transform {
             // 替换自己的AppInfo.class
             String tempFolder = HotFix.getTempFolder(project, flavor, buildType)
 //            Command.execute("javac", "${tempFolder}${File.separator}AppInfo.java", "-d", outDir.path)
-            Command.execute("javac", "-d", classesFolder.path, "-source", "1.7", "-target", "1.7", "${tempFolder}${File.separator}AppInfo.java")
+            Command.execute("javac", "-d", classesFolder.path,
+                    "-source", "1.7", "-target", "1.7",
+                    "${tempFolder}${File.separator}AppInfo.java")
         }
     }
 }

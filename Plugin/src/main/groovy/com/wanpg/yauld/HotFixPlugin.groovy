@@ -5,9 +5,9 @@ import com.android.build.gradle.api.ApplicationVariant
 import com.android.build.gradle.api.BaseVariantOutput
 import com.android.build.gradle.internal.api.ApkVariantOutputImpl
 import com.wanpg.yauld.task.BaseTask
-import com.wanpg.yauld.task.BeforePackageTask
 import com.wanpg.yauld.task.DexModifyTransform
 import com.wanpg.yauld.task.ManifestModifyTask
+import com.wanpg.yauld.utils.Utils
 import org.gradle.api.Plugin
 import org.gradle.api.Project
 
@@ -30,9 +30,11 @@ class HotFixPlugin implements Plugin<Project> {
 
         AppExtension androidExtension = android
 
-        androidExtension.registerTransform(new DexModifyTransform(project, androidExtension))
+        def dexModifyTransform = new DexModifyTransform(project, androidExtension)
+        androidExtension.registerTransform(dexModifyTransform)
 
         project.afterEvaluate {
+
             ConfigParams configParams = project.extensions.findByType(ConfigParams)
 
             if(!configParams.build_enable){
@@ -48,6 +50,7 @@ class HotFixPlugin implements Plugin<Project> {
 
                     if (variantOutput.processResources.instantRunMode) {
                         project.logger.info("Yauld Hotfix Plug-in can not run under instant run mode")
+                        Utils.print("Yauld Hotfix Plug-in can not run under instant run mode")
                         return
                     }
 

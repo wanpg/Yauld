@@ -10,14 +10,10 @@ public class YauldDexClassLoader extends ClassLoader {
 
     private final DelegateClassLoader delegateClassLoader;
 
-    private boolean isLoadFinish;
-
     public YauldDexClassLoader(ClassLoader original, String nativeLibraryPath, final String codeCacheDir, final List<String> dexes) {
         super(original.getParent());
-        isLoadFinish = false;
         String pathBuilder = createDexPath(dexes);
         delegateClassLoader = new DelegateClassLoader(pathBuilder, codeCacheDir, nativeLibraryPath, original);
-        isLoadFinish = true;
     }
 
     public Class<?> findClass(String className) throws ClassNotFoundException {
@@ -26,10 +22,6 @@ public class YauldDexClassLoader extends ClassLoader {
         } catch (ClassNotFoundException e) {
             throw e;
         }
-    }
-
-    public boolean isLoadFinish() {
-        return isLoadFinish;
     }
 
     private static class DelegateClassLoader extends DexClassLoader {
@@ -72,11 +64,5 @@ public class YauldDexClassLoader extends ClassLoader {
         } catch (NoSuchFieldException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    public static YauldDexClassLoader inject(ClassLoader classLoader, String nativeLibraryPath, String codeCacheDir, List<String> dexes) {
-        YauldDexClassLoader yauldDexClassLoader = new YauldDexClassLoader(classLoader, nativeLibraryPath, codeCacheDir, dexes);
-        setParent(classLoader, yauldDexClassLoader);
-        return yauldDexClassLoader;
     }
 }

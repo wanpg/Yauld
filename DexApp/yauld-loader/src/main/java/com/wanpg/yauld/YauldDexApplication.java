@@ -23,14 +23,14 @@ public class YauldDexApplication extends Application {
 
     private Application realApplication;
     private String mainThreadName;
-
+    private YauldDex yauldDex;
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
         YauldDex.debug("----------------A");
-
+        yauldDex = new YauldDex();
         // 初始化，加载appinfo
-        new YauldDex().install(this);
+        yauldDex.install(this);
 
         // 创建真正的Application
         realApplication = createRealApplication();
@@ -60,7 +60,7 @@ public class YauldDexApplication extends Application {
 
     @Override
     public void onCreate() {
-        YauldDex.monkeyPatchApplication(this, this, this.realApplication, null);
+        YauldDex.monkeyPatchApplication(this, this.realApplication, yauldDex.externalResourcePath);
         super.onCreate();
         mainThreadName = Thread.currentThread().getName();
         this.realApplication.onCreate();
