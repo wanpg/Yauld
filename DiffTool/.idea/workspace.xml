@@ -19,8 +19,8 @@
       <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-51">
-              <caret line="73" column="7" lean-forward="false" selection-start-line="73" selection-start-column="7" selection-end-line="73" selection-end-column="7" />
+            <state relative-caret-position="-731">
+              <caret line="33" column="19" lean-forward="true" selection-start-line="33" selection-start-column="19" selection-end-line="33" selection-end-column="19" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -32,8 +32,10 @@
         <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/diff/ResourceDiff.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="238">
-              <caret line="18" column="70" lean-forward="true" selection-start-line="18" selection-start-column="28" selection-end-line="18" selection-end-column="70" />
-              <folding />
+              <caret line="18" column="70" lean-forward="false" selection-start-line="18" selection-start-column="28" selection-end-line="18" selection-end-column="70" />
+              <folding>
+                <element signature="imports" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -41,11 +43,9 @@
       <file leaf-file-name="DexDiff.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/diff/DexDiff.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="578">
-              <caret line="34" column="68" lean-forward="true" selection-start-line="34" selection-start-column="68" selection-end-line="34" selection-end-column="68" />
-              <folding>
-                <element signature="imports" expanded="true" />
-              </folding>
+            <state relative-caret-position="476">
+              <caret line="34" column="68" lean-forward="false" selection-start-line="34" selection-start-column="68" selection-end-line="34" selection-end-column="68" />
+              <folding />
             </state>
           </provider>
         </entry>
@@ -54,7 +54,7 @@
         <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/Test.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="136">
-              <caret line="8" column="5" lean-forward="true" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="5" />
+              <caret line="8" column="5" lean-forward="false" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="5" />
               <folding />
             </state>
           </provider>
@@ -63,11 +63,59 @@
       <file leaf-file-name="ZipUtil.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/org/zeroturnaround/zip/ZipUtil.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="448">
+            <state relative-caret-position="24939">
               <caret line="1540" column="35" lean-forward="false" selection-start-line="1540" selection-start-column="35" selection-end-line="1540" selection-end-column="35" />
               <folding>
-                <element signature="e#33289#33290#0" expanded="true" />
-                <element signature="e#33344#33345#0" expanded="true" />
+                <element signature="n#!!doc" expanded="false" />
+                <element signature="imports" expanded="false" />
+                <element signature="e#3568#3569#0" expanded="false" />
+                <element signature="e#3623#3624#0" expanded="false" />
+                <element signature="e#7300#7301#0" expanded="false" />
+                <element signature="e#7326#7327#0" expanded="false" />
+                <element signature="e#10473#10474#0" expanded="false" />
+                <element signature="e#10503#10504#0" expanded="false" />
+                <element signature="e#17327#17328#0" expanded="false" />
+                <element signature="e#17362#17363#0" expanded="false" />
+                <element signature="e#21934#21935#0" expanded="false" />
+                <element signature="e#21960#21961#0" expanded="false" />
+                <element signature="e#22322#22323#0" expanded="false" />
+                <element signature="e#22383#22384#0" expanded="false" />
+                <element signature="e#23338#23339#0" expanded="false" />
+                <element signature="e#23399#23400#0" expanded="false" />
+                <element signature="e#24365#24366#0" expanded="false" />
+                <element signature="e#24425#24426#0" expanded="false" />
+                <element signature="e#25402#25403#0" expanded="false" />
+                <element signature="e#25462#25463#0" expanded="false" />
+                <element signature="e#27808#27809#0" expanded="false" />
+                <element signature="e#27866#27867#0" expanded="false" />
+                <element signature="e#30735#30736#0" expanded="false" />
+                <element signature="e#30785#30786#0" expanded="false" />
+                <element signature="e#34698#34699#0" expanded="false" />
+                <element signature="e#34761#34762#0" expanded="false" />
+                <element signature="e#35883#35884#0" expanded="false" />
+                <element signature="e#35924#35925#0" expanded="false" />
+                <element signature="e#48652#48653#0" expanded="false" />
+                <element signature="e#48691#48692#0" expanded="false" />
+                <element signature="e#49114#49115#0" expanded="false" />
+                <element signature="e#49165#49166#0" expanded="false" />
+                <element signature="e#65563#65564#0" expanded="false" />
+                <element signature="e#65642#65643#0" expanded="false" />
+                <element signature="e#66732#66733#0" expanded="false" />
+                <element signature="e#66812#66813#0" expanded="false" />
+                <element signature="e#68544#68545#0" expanded="false" />
+                <element signature="e#68602#68603#0" expanded="false" />
+                <element signature="e#70793#70794#0" expanded="false" />
+                <element signature="e#70855#70856#0" expanded="false" />
+                <element signature="e#74645#74646#0" expanded="false" />
+                <element signature="e#74717#74718#0" expanded="false" />
+                <element signature="e#75698#75699#0" expanded="false" />
+                <element signature="e#75758#75759#0" expanded="false" />
+                <element signature="e#77270#77271#0" expanded="false" />
+                <element signature="e#77334#77335#0" expanded="false" />
+                <element signature="e#80554#80555#0" expanded="false" />
+                <element signature="e#80606#80607#0" expanded="false" />
+                <element signature="e#87665#87666#0" expanded="false" />
+                <element signature="e#87713#87714#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -79,7 +127,8 @@
             <state relative-caret-position="391">
               <caret line="32" column="21" lean-forward="false" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
               <folding>
-                <element signature="imports" expanded="true" />
+                <element signature="e#638#639#0" expanded="false" />
+                <element signature="e#655#656#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -90,7 +139,11 @@
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="204">
               <caret line="26" column="33" lean-forward="false" selection-start-line="26" selection-start-column="33" selection-end-line="26" selection-end-column="33" />
-              <folding />
+              <folding>
+                <element signature="n#!!doc" expanded="false" />
+                <element signature="e#1000#1001#0" expanded="false" />
+                <element signature="e#1021#1022#0" expanded="false" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -167,8 +220,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
+      <pane id="PackagesPane" />
       <pane id="ProjectPane">
         <subPane>
           <PATH>
@@ -197,7 +249,8 @@
           </PATH>
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -207,18 +260,18 @@
     <property name="FullScreen" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/temp" />
-    </key>
-    <key name="CopyClassDialog.RECENTS_KEY">
-      <recent name="com.company" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$/temp" />
       <recent name="$PROJECT_DIR$/src/com/wanpg/yauld/bs" />
       <recent name="$PROJECT_DIR$/src" />
       <recent name="$PROJECT_DIR$/src/org" />
       <recent name="$PROJECT_DIR$/libs" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.company" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/temp" />
     </key>
   </component>
   <component name="RunManager" selected="Application.Main">
@@ -466,7 +519,7 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1440" height="900" extended-state="0" />
-    <editor active="false" />
+    <editor active="true" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -477,25 +530,25 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31965175" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.31965175" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298647" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20028612" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.20243205" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329602" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39925373" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.39925373" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -523,62 +576,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="30957">
           <caret line="1821" column="26" lean-forward="false" selection-start-line="1821" selection-start-column="26" selection-end-line="1821" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#147821#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#23047#23048#0" expanded="false" />
-            <element signature="e#23104#23105#0" expanded="false" />
-            <element signature="e#23453#23454#0" expanded="false" />
-            <element signature="e#23509#23510#0" expanded="false" />
-            <element signature="e#32636#32637#0" expanded="false" />
-            <element signature="e#32683#32684#0" expanded="false" />
-            <element signature="e#45841#45842#0" expanded="false" />
-            <element signature="e#45932#45933#0" expanded="false" />
-            <element signature="e#56746#56747#0" expanded="false" />
-            <element signature="e#56789#56790#0" expanded="false" />
-            <element signature="e#58208#58209#0" expanded="false" />
-            <element signature="e#58257#58258#0" expanded="false" />
-            <element signature="e#58496#58497#0" expanded="false" />
-            <element signature="e#58567#58568#0" expanded="false" />
-            <element signature="e#58809#58810#0" expanded="false" />
-            <element signature="e#58891#58892#0" expanded="false" />
-            <element signature="e#104463#104464#0" expanded="false" />
-            <element signature="e#104523#104524#0" expanded="false" />
-            <element signature="e#112572#112573#0" expanded="false" />
-            <element signature="e#112604#112605#0" expanded="false" />
-            <element signature="e#112898#112899#0" expanded="false" />
-            <element signature="e#112942#112943#0" expanded="false" />
-            <element signature="e#114513#114514#0" expanded="false" />
-            <element signature="e#114550#114551#0" expanded="false" />
-            <element signature="e#114579#114580#0" expanded="false" />
-            <element signature="e#114620#114621#0" expanded="false" />
-            <element signature="e#117160#117161#0" expanded="false" />
-            <element signature="e#117198#117199#0" expanded="false" />
-            <element signature="e#136811#136812#0" expanded="false" />
-            <element signature="e#136896#136897#0" expanded="false" />
-            <element signature="e#139547#139548#0" expanded="false" />
-            <element signature="e#139624#139625#0" expanded="false" />
-            <element signature="e#144390#144391#0" expanded="false" />
-            <element signature="e#144427#144428#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/company/AppInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="6" column="13" lean-forward="false" selection-start-line="6" selection-start-column="13" selection-end-line="6" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/company/AppInfo.java" />
     <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/Command.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="34">
           <caret line="2" column="0" lean-forward="false" selection-start-line="2" selection-start-column="0" selection-end-line="2" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -586,9 +591,7 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="16" column="0" lean-forward="false" selection-start-line="16" selection-start-column="0" selection-end-line="16" selection-end-column="0" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
+          <folding />
         </state>
       </provider>
     </entry>
@@ -596,7 +599,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="357">
           <caret line="26" column="43" lean-forward="false" selection-start-line="26" selection-start-column="43" selection-end-line="26" selection-end-column="43" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -605,19 +607,8 @@
         <state relative-caret-position="221">
           <caret line="20" column="33" lean-forward="false" selection-start-line="20" selection-start-column="33" selection-end-line="20" selection-end-column="33" />
           <folding>
-            <element signature="imports" expanded="false" />
-            <element signature="e#242#243#0" expanded="false" />
-            <element signature="e#276#277#0" expanded="false" />
-            <element signature="e#342#343#0" expanded="false" />
-            <element signature="e#393#394#0" expanded="false" />
-            <element signature="e#4394#4395#0" expanded="false" />
-            <element signature="e#4439#4440#0" expanded="false" />
-            <element signature="e#4485#4486#0" expanded="false" />
-            <element signature="e#4537#4538#0" expanded="false" />
-            <element signature="e#4731#4732#0" expanded="false" />
-            <element signature="e#4776#4777#0" expanded="false" />
-            <element signature="e#5117#5118#0" expanded="false" />
-            <element signature="e#5175#5176#0" expanded="false" />
+            <element signature="e#914#915#0" expanded="false" />
+            <element signature="e#976#977#0" expanded="false" />
           </folding>
         </state>
       </provider>
@@ -630,44 +621,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="29546">
           <caret line="1821" column="26" lean-forward="false" selection-start-line="1821" selection-start-column="26" selection-end-line="1821" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#147821#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#23047#23048#0" expanded="false" />
-            <element signature="e#23104#23105#0" expanded="false" />
-            <element signature="e#23453#23454#0" expanded="false" />
-            <element signature="e#23509#23510#0" expanded="false" />
-            <element signature="e#32636#32637#0" expanded="false" />
-            <element signature="e#32683#32684#0" expanded="false" />
-            <element signature="e#45841#45842#0" expanded="false" />
-            <element signature="e#45932#45933#0" expanded="false" />
-            <element signature="e#56746#56747#0" expanded="false" />
-            <element signature="e#56789#56790#0" expanded="false" />
-            <element signature="e#58208#58209#0" expanded="false" />
-            <element signature="e#58257#58258#0" expanded="false" />
-            <element signature="e#58496#58497#0" expanded="false" />
-            <element signature="e#58567#58568#0" expanded="false" />
-            <element signature="e#58809#58810#0" expanded="false" />
-            <element signature="e#58891#58892#0" expanded="false" />
-            <element signature="e#104463#104464#0" expanded="false" />
-            <element signature="e#104523#104524#0" expanded="false" />
-            <element signature="e#112572#112573#0" expanded="false" />
-            <element signature="e#112604#112605#0" expanded="false" />
-            <element signature="e#112898#112899#0" expanded="false" />
-            <element signature="e#112942#112943#0" expanded="false" />
-            <element signature="e#114513#114514#0" expanded="false" />
-            <element signature="e#114550#114551#0" expanded="false" />
-            <element signature="e#114579#114580#0" expanded="false" />
-            <element signature="e#114620#114621#0" expanded="false" />
-            <element signature="e#117160#117161#0" expanded="false" />
-            <element signature="e#117198#117199#0" expanded="false" />
-            <element signature="e#136811#136812#0" expanded="false" />
-            <element signature="e#136896#136897#0" expanded="false" />
-            <element signature="e#139547#139548#0" expanded="false" />
-            <element signature="e#139624#139625#0" expanded="false" />
-            <element signature="e#144390#144391#0" expanded="false" />
-            <element signature="e#144427#144428#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -689,9 +642,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="9" column="13" lean-forward="false" selection-start-line="9" selection-start-column="13" selection-end-line="9" selection-end-column="13" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -700,10 +650,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="136">
           <caret line="12" column="13" lean-forward="false" selection-start-line="12" selection-start-column="13" selection-end-line="12" selection-end-column="13" />
-          <folding>
-            <element signature="e#738#739#0" expanded="false" />
-            <element signature="e#788#789#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -722,58 +668,15 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/baksmali-2.2b4.jar!/org/jf/baksmali/Main.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="225">
-          <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/jf/smali/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="425">
-          <caret line="65" column="0" lean-forward="false" selection-start-line="65" selection-start-column="0" selection-end-line="65" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/jf/baksmali/Adaptors/Debug/LocalFormatter.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/jf/dexlib2/base/value/BaseIntEncodedValue.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/jf/util/Hex.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/baksmali-2.2b4.jar!/org/jf/baksmali/DisassembleCommand.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="475">
-          <caret line="156" column="0" lean-forward="false" selection-start-line="156" selection-start-column="0" selection-end-line="156" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/baksmali-2.2b4.jar!/org/jf/baksmali/Main.class" />
+    <entry file="file://$PROJECT_DIR$/src/org/jf/smali/Main.java" />
+    <entry file="file://$PROJECT_DIR$/src/org/jf/baksmali/Adaptors/Debug/LocalFormatter.java" />
+    <entry file="file://$PROJECT_DIR$/src/org/jf/dexlib2/base/value/BaseIntEncodedValue.java" />
+    <entry file="file://$PROJECT_DIR$/src/org/jf/util/Hex.java" />
+    <entry file="jar://$PROJECT_DIR$/libs/baksmali-2.2b4.jar!/org/jf/baksmali/DisassembleCommand.class" />
     <entry file="file://$PROJECT_DIR$/temp/new.apk">
       <provider selected="true" editor-type-id="apk-viewer">
         <state />
@@ -792,30 +695,15 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/company/AppInfo.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="0" lean-forward="true" selection-start-line="11" selection-start-column="0" selection-end-line="11" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/company/AppInfo.java" />
     <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/Context.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="85">
           <caret line="5" column="20" lean-forward="false" selection-start-line="5" selection-start-column="20" selection-end-line="5" selection-end-column="20" />
-          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/company/YauldDex.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1598">
-          <caret line="119" column="17" lean-forward="true" selection-start-line="119" selection-start-column="17" selection-end-line="119" selection-end-column="17" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/company/YauldDex.java" />
     <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/utils/FileUtils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="275">
@@ -831,7 +719,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="272">
           <caret line="50" column="3" lean-forward="false" selection-start-line="50" selection-start-column="3" selection-end-line="50" selection-end-column="3" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -847,130 +734,23 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="170">
           <caret line="20" column="19" lean-forward="false" selection-start-line="20" selection-start-column="19" selection-end-line="20" selection-end-column="19" />
-          <folding>
-            <element signature="imports" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/resource/res/drawable/icon.jpg">
-      <provider selected="true" editor-type-id="images">
-        <state />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/resource/res/layout/notification_template_custom_big.xml">
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/resource/res/drawable/icon.jpg" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/resource/res/layout/notification_template_custom_big.xml" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/new/com/wanpg/yauld/AppInfo.smali" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/android/support/v7/appcompat/R$drawable.smali" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/AppInfo.smali" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/old/com/wanpg/yauld/demo/MainActivity.smali" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/new/com/wanpg/yauld/demo/MainActivity.smali" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/demo/R$styleable.smali" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/resource/res/layout/activity_main.xml" />
+    <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/utils/ZipUtils.java" />
+    <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/new/com/wanpg/yauld/AppInfo.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/android/support/v7/appcompat/R$drawable.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-408">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/AppInfo.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="30" column="0" lean-forward="true" selection-start-line="30" selection-start-column="0" selection-end-line="30" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/old/com/wanpg/yauld/demo/MainActivity.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-85">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/new/com/wanpg/yauld/demo/MainActivity.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-34">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/demo/R$styleable.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/resource/res/layout/activity_main.xml">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="187">
-          <caret line="11" column="7" lean-forward="true" selection-start-line="11" selection-start-column="7" selection-end-line="11" selection-end-column="7" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/zeroturnaround/zip/IdentityNameMapper.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="204">
-          <caret line="26" column="33" lean-forward="false" selection-start-line="26" selection-start-column="33" selection-end-line="26" selection-end-column="33" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/zeroturnaround/zip/commons/FileUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="391">
-          <caret line="32" column="21" lean-forward="false" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/org/zeroturnaround/zip/ZipUtil.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="448">
-          <caret line="1540" column="35" lean-forward="false" selection-start-line="1540" selection-start-column="35" selection-end-line="1540" selection-end-column="35" />
-          <folding>
-            <element signature="e#33289#33290#0" expanded="true" />
-            <element signature="e#33344#33345#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/utils/ZipUtils.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="287">
-          <caret line="61" column="32" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="213" selection-end-column="3" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/Test.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="136">
-          <caret line="8" column="5" lean-forward="true" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="5" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/diff/DexDiff.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="578">
-          <caret line="34" column="68" lean-forward="true" selection-start-line="34" selection-start-column="68" selection-end-line="34" selection-end-column="68" />
+        <state relative-caret-position="-731">
+          <caret line="33" column="19" lean-forward="true" selection-start-line="33" selection-start-column="19" selection-end-line="33" selection-end-column="19" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -980,17 +760,107 @@
     <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/diff/ResourceDiff.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="238">
-          <caret line="18" column="70" lean-forward="true" selection-start-line="18" selection-start-column="28" selection-end-line="18" selection-end-column="70" />
+          <caret line="18" column="70" lean-forward="false" selection-start-line="18" selection-start-column="28" selection-end-line="18" selection-end-column="70" />
+          <folding>
+            <element signature="imports" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/diff/DexDiff.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="34" column="68" lean-forward="false" selection-start-line="34" selection-start-column="68" selection-end-line="34" selection-end-column="68" />
           <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/Main.java">
+    <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/Test.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-51">
-          <caret line="73" column="7" lean-forward="false" selection-start-line="73" selection-start-column="7" selection-end-line="73" selection-end-column="7" />
+        <state relative-caret-position="136">
+          <caret line="8" column="5" lean-forward="false" selection-start-line="8" selection-start-column="5" selection-end-line="8" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/zeroturnaround/zip/ZipUtil.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="24939">
+          <caret line="1540" column="35" lean-forward="false" selection-start-line="1540" selection-start-column="35" selection-end-line="1540" selection-end-column="35" />
           <folding>
-            <element signature="imports" expanded="true" />
+            <element signature="n#!!doc" expanded="false" />
+            <element signature="imports" expanded="false" />
+            <element signature="e#3568#3569#0" expanded="false" />
+            <element signature="e#3623#3624#0" expanded="false" />
+            <element signature="e#7300#7301#0" expanded="false" />
+            <element signature="e#7326#7327#0" expanded="false" />
+            <element signature="e#10473#10474#0" expanded="false" />
+            <element signature="e#10503#10504#0" expanded="false" />
+            <element signature="e#17327#17328#0" expanded="false" />
+            <element signature="e#17362#17363#0" expanded="false" />
+            <element signature="e#21934#21935#0" expanded="false" />
+            <element signature="e#21960#21961#0" expanded="false" />
+            <element signature="e#22322#22323#0" expanded="false" />
+            <element signature="e#22383#22384#0" expanded="false" />
+            <element signature="e#23338#23339#0" expanded="false" />
+            <element signature="e#23399#23400#0" expanded="false" />
+            <element signature="e#24365#24366#0" expanded="false" />
+            <element signature="e#24425#24426#0" expanded="false" />
+            <element signature="e#25402#25403#0" expanded="false" />
+            <element signature="e#25462#25463#0" expanded="false" />
+            <element signature="e#27808#27809#0" expanded="false" />
+            <element signature="e#27866#27867#0" expanded="false" />
+            <element signature="e#30735#30736#0" expanded="false" />
+            <element signature="e#30785#30786#0" expanded="false" />
+            <element signature="e#34698#34699#0" expanded="false" />
+            <element signature="e#34761#34762#0" expanded="false" />
+            <element signature="e#35883#35884#0" expanded="false" />
+            <element signature="e#35924#35925#0" expanded="false" />
+            <element signature="e#48652#48653#0" expanded="false" />
+            <element signature="e#48691#48692#0" expanded="false" />
+            <element signature="e#49114#49115#0" expanded="false" />
+            <element signature="e#49165#49166#0" expanded="false" />
+            <element signature="e#65563#65564#0" expanded="false" />
+            <element signature="e#65642#65643#0" expanded="false" />
+            <element signature="e#66732#66733#0" expanded="false" />
+            <element signature="e#66812#66813#0" expanded="false" />
+            <element signature="e#68544#68545#0" expanded="false" />
+            <element signature="e#68602#68603#0" expanded="false" />
+            <element signature="e#70793#70794#0" expanded="false" />
+            <element signature="e#70855#70856#0" expanded="false" />
+            <element signature="e#74645#74646#0" expanded="false" />
+            <element signature="e#74717#74718#0" expanded="false" />
+            <element signature="e#75698#75699#0" expanded="false" />
+            <element signature="e#75758#75759#0" expanded="false" />
+            <element signature="e#77270#77271#0" expanded="false" />
+            <element signature="e#77334#77335#0" expanded="false" />
+            <element signature="e#80554#80555#0" expanded="false" />
+            <element signature="e#80606#80607#0" expanded="false" />
+            <element signature="e#87665#87666#0" expanded="false" />
+            <element signature="e#87713#87714#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/zeroturnaround/zip/commons/FileUtils.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="391">
+          <caret line="32" column="21" lean-forward="false" selection-start-line="32" selection-start-column="21" selection-end-line="32" selection-end-column="21" />
+          <folding>
+            <element signature="e#638#639#0" expanded="false" />
+            <element signature="e#655#656#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/org/zeroturnaround/zip/IdentityNameMapper.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="204">
+          <caret line="26" column="33" lean-forward="false" selection-start-line="26" selection-start-column="33" selection-end-line="26" selection-end-column="33" />
+          <folding>
+            <element signature="n#!!doc" expanded="false" />
+            <element signature="e#1000#1001#0" expanded="false" />
+            <element signature="e#1021#1022#0" expanded="false" />
           </folding>
         </state>
       </provider>

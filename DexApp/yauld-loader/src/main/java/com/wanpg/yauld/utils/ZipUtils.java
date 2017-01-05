@@ -1,6 +1,7 @@
 package com.wanpg.yauld.utils;
 
 import java.io.BufferedInputStream;
+import java.io.Closeable;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -28,8 +29,8 @@ public class ZipUtils {
      * @param srcPath  源文件路径
      * @param destPath 目标文件路径
      */
-    public static void compress(String srcPath, String destPath) throws IOException {
-        compress(new File(srcPath), new File(destPath));
+    public static boolean compress(String srcPath, String destPath) {
+        return compress(new File(srcPath), new File(destPath));
     }
 
     /**
@@ -39,15 +40,33 @@ public class ZipUtils {
      * @param destFile 目标路径
      * @throws Exception
      */
-    public static void compress(File srcFile, File destFile) throws IOException {
-
+    public static boolean compress(File srcFile, File destFile) {
         // 对输出文件做CRC32校验
-        CheckedOutputStream cos =
-                new CheckedOutputStream(new FileOutputStream(destFile), new CRC32());
-        ZipOutputStream zos = new ZipOutputStream(cos);
-        compress(srcFile, zos, BASE_DIR);
-        zos.flush();
-        zos.close();
+        CheckedOutputStream cos = null;
+        ZipOutputStream zos = null;
+        try {
+            cos = new CheckedOutputStream(new FileOutputStream(destFile), new CRC32());
+            zos = new ZipOutputStream(cos);
+            compress(srcFile, zos, BASE_DIR);
+            zos.flush();
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            closeStream(zos);
+            closeStream(cos);
+        }
+    }
+
+    private static void closeStream(Closeable closeable) {
+        if (closeable != null) {
+            try {
+                closeable.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
@@ -62,7 +81,7 @@ public class ZipUtils {
             throws IOException {
         if (srcFile.isDirectory()) {
             File[] files = srcFile.listFiles();
-            if(files != null) {
+            if (files != null) {
                 // 构建空目录
                 if (files.length < 1) {
                     ZipEntry entry = new ZipEntry(basePath + srcFile.getName() + PATH);
@@ -70,10 +89,10 @@ public class ZipUtils {
                     zos.closeEntry();
                 }
                 for (File file : files) {
-                    if(file.isDirectory()) {
+                    if (file.isDirectory()) {
                         // 递归压缩
                         compress(file, zos, basePath + file.getName() + PATH);
-                    }else{
+                    } else {
                         compressFile(file, zos, basePath);
                     }
                 }
@@ -125,8 +144,8 @@ public class ZipUtils {
      * @param descDir
      * @author isea533
      */
-    public static void unZipFiles(String zipPath, String descDir) throws IOException {
-        unZipFiles(new File(zipPath), descDir);
+    public static boolean unZipFiles(String zipPath, String descDir) {
+        return unZipFiles(new File(zipPath), descDir);
     }
 
     /**
@@ -136,70 +155,30 @@ public class ZipUtils {
      * @param destDir
      * @author isea533
      */
-    public static void unZipFiles(File zipFile, String destDir) throws IOException {
+    public static boolean unZipFiles(File zipFile, String destDir) {
         File pathFile = new File(destDir);
         if (!pathFile.exists()) {
             pathFile.mkdirs();
         }
-        ZipFile zip = new ZipFile(zipFile);
-        for (Enumeration entries = zip.entries(); entries.hasMoreElements(); ) {
-            ZipEntry entry = (ZipEntry) entries.nextElement();
-            String zipEntryName = entry.getName();
-            InputStream in = zip.getInputStream(entry);
-            String outPath = ((destDir.endsWith(File.separator) ? destDir : (destDir + File.separator)) + zipEntryName).replaceAll("\\*", "/");
-            //判断路径是否存在,不存在则创建文件路径
-            File file = new File(outPath.substring(0, outPath.lastIndexOf('/')));
-            if (!file.exists()) {
-                file.mkdirs();
-            }
-            //判断文件全路径是否为文件夹,如果是上面已经上传,不需要解压
-            if (new File(outPath).isDirectory()) {
-                continue;
-            }
-            //输出文件路径信息
-            System.out.println(outPath);
-
-            OutputStream out = new FileOutputStream(outPath);
-            byte[] buf1 = new byte[1024];
-            int len;
-            while ((len = in.read(buf1)) > 0) {
-                out.write(buf1, 0, len);
-            }
-            in.close();
-            out.close();
-        }
-        System.out.println("******************解压完毕********************");
-    }
-
-    /**
-     * 解压apk下面的res、assets和resources.arsc
-     */
-    public static void unZipApkResources(String path, String destDir) throws IOException {
-        File pathFile = new File(destDir);
-        if (!pathFile.exists()) {
-            pathFile.mkdirs();
-        }
-        ZipFile zip = new ZipFile(path);
-        System.out.println(zip.size());
-        for (Enumeration entries = zip.entries(); entries.hasMoreElements(); ) {
-            ZipEntry entry = (ZipEntry) entries.nextElement();
-            String zipEntryName = entry.getName();
-            if("resources.arsc".equals(zipEntryName) || zipEntryName.startsWith("res")
-                    || zipEntryName.startsWith("assets")) {
-                File outFile = new File(destDir, zipEntryName);
+        ZipFile zip = null;
+        try {
+            zip = new ZipFile(zipFile);
+            for (Enumeration entries = zip.entries(); entries.hasMoreElements(); ) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
+                String zipEntryName = entry.getName();
+                InputStream in = zip.getInputStream(entry);
+                String outPath = ((destDir.endsWith(File.separator) ? destDir : (destDir + File.separator)) + zipEntryName).replaceAll("\\*", "/");
                 //判断路径是否存在,不存在则创建文件路径
-                File file = outFile.getParentFile();
+                File file = new File(outPath.substring(0, outPath.lastIndexOf('/')));
                 if (!file.exists()) {
                     file.mkdirs();
                 }
                 //判断文件全路径是否为文件夹,如果是上面已经上传,不需要解压
-                if (outFile.isDirectory()) {
+                if (new File(outPath).isDirectory()) {
                     continue;
                 }
                 //输出文件路径信息
-                System.out.println(outFile.getAbsolutePath());
-                InputStream in = zip.getInputStream(entry);
-                OutputStream out = new FileOutputStream(outFile);
+                OutputStream out = new FileOutputStream(outPath);
                 byte[] buf1 = new byte[1024];
                 int len;
                 while ((len = in.read(buf1)) > 0) {
@@ -208,7 +187,74 @@ public class ZipUtils {
                 in.close();
                 out.close();
             }
+            System.out.println("******************解压完毕********************");
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (zip != null) {
+                try {
+                    zip.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        System.out.println("******************解压完毕********************");
+    }
+
+    /**
+     * 解压apk下面的res、assets和resources.arsc
+     */
+    public static boolean unZipApkResources(String path, String destDir) {
+        File pathFile = new File(destDir);
+        if (!pathFile.exists()) {
+            pathFile.mkdirs();
+        }
+        ZipFile zip = null;
+        try {
+            zip = new ZipFile(path);
+            for (Enumeration entries = zip.entries(); entries.hasMoreElements(); ) {
+                ZipEntry entry = (ZipEntry) entries.nextElement();
+                String zipEntryName = entry.getName();
+                if ("resources.arsc".equals(zipEntryName) || zipEntryName.startsWith("res")
+                        || zipEntryName.startsWith("assets")) {
+                    File outFile = new File(destDir, zipEntryName);
+                    //判断路径是否存在,不存在则创建文件路径
+                    File file = outFile.getParentFile();
+                    if (!file.exists()) {
+                        file.mkdirs();
+                    }
+                    //判断文件全路径是否为文件夹,如果是上面已经上传,不需要解压
+                    if (outFile.isDirectory()) {
+                        continue;
+                    }
+                    //输出文件路径信息
+                    InputStream in = zip.getInputStream(entry);
+                    OutputStream out = new FileOutputStream(outFile);
+                    byte[] buf1 = new byte[1024];
+                    int len;
+                    while ((len = in.read(buf1)) > 0) {
+                        out.write(buf1, 0, len);
+                    }
+                    in.close();
+                    out.close();
+                }
+            }
+            zip.close();
+            System.out.println("******************解压完毕********************");
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        } finally {
+            if (zip != null) {
+                try {
+                    zip.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 }  

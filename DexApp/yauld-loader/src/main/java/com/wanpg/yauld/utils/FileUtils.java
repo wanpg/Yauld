@@ -113,4 +113,14 @@ public class FileUtils {
     public static boolean exists(String path) {
         return new File(path).exists();
     }
+
+    public static void setFileLastModify(String file, long modify){
+        setFileLastModify(new File(file), modify);
+    }
+
+    public static void setFileLastModify(File file, long modify){
+        if(file.exists()){
+            boolean b = file.setLastModified(modify);
+        }
+    }
 }

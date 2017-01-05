@@ -1,19 +1,20 @@
 package com.wanpg.yauld;
 
 import android.annotation.TargetApi;
-import android.app.ActivityManager;
 import android.app.Application;
 import android.content.ComponentCallbacks;
 import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.pm.PackageManager;
 import android.os.Build;
-import android.os.Handler;
-import android.os.Looper;
 
 import com.wanpg.yauld.utils.Utils;
 
+import java.lang.ref.WeakReference;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by wangjinpeng on 2016/12/10.
@@ -22,16 +23,12 @@ import java.util.List;
 public class YauldDexApplication extends Application {
 
     private Application realApplication;
-    private String mainThreadName;
-    private YauldDex yauldDex;
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
-        YauldDex.debug("----------------A");
-        yauldDex = new YauldDex();
         // 初始化，加载appinfo
-        yauldDex.install(this);
-
+        YauldDex.install(this);
         // 创建真正的Application
         realApplication = createRealApplication();
         if (realApplication == null) {
@@ -42,6 +39,10 @@ public class YauldDexApplication extends Application {
         Utils.invokeMethod(ContextWrapper.class, "attachBaseContext", Context.class, realApplication, base);
     }
 
+    /**
+     * 创建真正的Application
+     * @return
+     */
     private Application createRealApplication() {
         Application realApplication = null;
         try {
@@ -60,10 +61,10 @@ public class YauldDexApplication extends Application {
 
     @Override
     public void onCreate() {
-        YauldDex.monkeyPatchApplication(this, this.realApplication, yauldDex.externalResourcePath);
+        monkeyPatchApplication(this, this.realApplication, YauldDex.externalResourcePath);
         super.onCreate();
-        mainThreadName = Thread.currentThread().getName();
         this.realApplication.onCreate();
+        YauldDex.register(this);
     }
 
     @Override
@@ -107,29 +108,77 @@ public class YauldDexApplication extends Application {
         return localContext;
     }
 
-
-    private void runOnUiThread(Runnable runnable){
-        if(Thread.currentThread().getName().equals(mainThreadName)){
-            runnable.run();
-        }else{
-            if(Looper.myLooper() == null) {
-                Looper.prepare();
+    /**
+     * 替换所有ActivityThread中的Application为realApplication
+     * 替换资源路径为resource.zip
+     * @param bootstrap
+     * @param realApplication
+     * @param externalResourceFile
+     */
+    private static void monkeyPatchApplication(Application bootstrap, Application realApplication, String externalResourceFile) {
+        try {
+            Class<?> activityThread = Class.forName("android.app.ActivityThread");
+            Method m = activityThread.getMethod("currentActivityThread");
+            m.setAccessible(true);
+            Object currentActivityThread = m.invoke(activityThread);
+            if (realApplication != null) {
+                if (currentActivityThread != null) {
+                    Field mInitialApplication = activityThread.getDeclaredField("mInitialApplication");
+                    mInitialApplication.setAccessible(true);
+                    Application initialApplication = (Application) mInitialApplication.get(currentActivityThread);
+                    if (initialApplication == bootstrap) {
+                        mInitialApplication.set(currentActivityThread, realApplication);
+                    }
+                }
+                Field mAllApplications = activityThread.getDeclaredField("mAllApplications");
+                mAllApplications.setAccessible(true);
+                List<Application> allApplications = (List<Application>) mAllApplications.get(currentActivityThread);
+                for (int i = 0; i < allApplications.size(); i++) {
+                    if (allApplications.get(i) == bootstrap) {
+                        allApplications.set(i, realApplication);
+                    }
+                }
             }
-            new Handler(Looper.getMainLooper()).post(runnable);
-        }
-    }
-
-    public static String getProcessName(Context cxt, int pid) {
-        ActivityManager am = (ActivityManager) cxt.getSystemService(Context.ACTIVITY_SERVICE);
-        List<ActivityManager.RunningAppProcessInfo> runningApps = am.getRunningAppProcesses();
-        if (runningApps == null) {
-            return null;
-        }
-        for (ActivityManager.RunningAppProcessInfo procInfo : runningApps) {
-            if (procInfo.pid == pid) {
-                return procInfo.processName;
+            Class<?> loadedApkClass;
+            try {
+                loadedApkClass = Class.forName("android.app.LoadedApk");
+            } catch (ClassNotFoundException e) {
+                loadedApkClass = Class.forName("android.app.ActivityThread$PackageInfo");
             }
+            Field mApplication = loadedApkClass.getDeclaredField("mApplication");
+            mApplication.setAccessible(true);
+            Field mResDir = loadedApkClass.getDeclaredField("mResDir");
+            mResDir.setAccessible(true);
+
+            Field mLoadedApk = null;
+            try {
+                mLoadedApk = Application.class.getDeclaredField("mLoadedApk");
+            } catch (NoSuchFieldException e) {
+            }
+            for (String fieldName : new String[]{"mPackages", "mResourcePackages"}) {
+                Field field = activityThread.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                Object value = field.get(currentActivityThread);
+                for (Map.Entry<String, WeakReference<?>> entry : ((Map<String, WeakReference<?>>) value).entrySet()) {
+                    Object loadedApk = ((WeakReference) entry.getValue()).get();
+                    if (loadedApk != null) {
+                        if (mApplication.get(loadedApk) == bootstrap) {
+                            if (realApplication != null) {
+                                mApplication.set(loadedApk, realApplication);
+                            }
+                            if (externalResourceFile != null) {
+                                mResDir.set(loadedApk, externalResourceFile);
+                            }
+                            if ((realApplication != null)
+                                    && (mLoadedApk != null)) {
+                                mLoadedApk.set(realApplication, loadedApk);
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        return null;
     }
 }

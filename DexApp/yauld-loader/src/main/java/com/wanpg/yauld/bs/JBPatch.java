@@ -91,6 +91,7 @@ public class JBPatch {
 
 		OutputStream newOutputStream = new FileOutputStream(newFile);
 		newOutputStream.write(newBytes);
+		newOutputStream.flush();
 		newOutputStream.close();
 	}
 

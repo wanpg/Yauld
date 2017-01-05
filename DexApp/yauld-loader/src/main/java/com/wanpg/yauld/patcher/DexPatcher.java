@@ -23,6 +23,13 @@ import java.util.List;
 
 public class DexPatcher {
 
+    /**
+     * 打补丁，目前是将 patch.dex 从 updateTemp文件夹 移动到 update 文件夹
+     * @param context
+     * @param updateTempFolderPath
+     * @param updateFolderPath
+     * @return
+     */
     public static boolean patch(Context context, String updateTempFolderPath, String updateFolderPath){
         File updateTempDexFile = new File(updateTempFolderPath, "patch.dex");
         if(updateTempDexFile.exists()) {
