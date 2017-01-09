@@ -54,7 +54,8 @@ update.zip
 
 ##### 4.2 如何保证应用快速启动
 ```
-
+1. 如果 update/resource.zip 和 update/patch.dex 已经存在，校验这两个文件的MD5与保存的是否一致，如果一致，则跳过解压和patch阶段
+2. 在应用运行中提前 预先优化dex和patch资源文件
 ```
 ##### 4.3 更新检查和下载功能
 ```

@@ -5,10 +5,6 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Enumeration;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipFile;
 
 /**
  * Created by wangjinpeng on 2016/12/11.
@@ -112,15 +108,5 @@ public class FileUtils {
 
     public static boolean exists(String path) {
         return new File(path).exists();
-    }
-
-    public static void setFileLastModify(String file, long modify){
-        setFileLastModify(new File(file), modify);
-    }
-
-    public static void setFileLastModify(File file, long modify){
-        if(file.exists()){
-            boolean b = file.setLastModified(modify);
-        }
     }
 }

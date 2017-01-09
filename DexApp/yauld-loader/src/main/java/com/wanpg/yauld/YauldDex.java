@@ -14,6 +14,7 @@ import android.util.Log;
 import com.wanpg.yauld.patcher.DexPatcher;
 import com.wanpg.yauld.patcher.ResourcePatcher;
 import com.wanpg.yauld.utils.FileUtils;
+import com.wanpg.yauld.utils.MD5;
 import com.wanpg.yauld.utils.Utils;
 import com.wanpg.yauld.utils.ZipUtils;
 
@@ -127,19 +128,18 @@ public class YauldDex {
             debugWithTimeMillis("YauldDex----install---B");
             // 检测 update.zip 的修改时间是否与保存的保持一致，如果不一致，则删除并返回
             boolean needReUnZip = true;
-            if(checkLastUpdateFile(context)){
-                if(setupClassLoader(context, context.getClassLoader())){
+            if (checkLastUpdateFile(context)) {
+                if (setupClassLoader(context, context.getClassLoader())) {
                     needReUnZip = false;
                     externalResourcePath = getYauldUpdateResourceZipPath(context);
-                    if(!FileUtils.exists(externalResourcePath)){
+                    if (!FileUtils.exists(externalResourcePath)) {
                         externalResourcePath = null;
                     }
                 }
             }
-            if(needReUnZip){
+            if (needReUnZip) {
                 FileUtils.delete(getYauldUpdateFolder(context));
                 FileUtils.delete(getYauldUpdateTempFolder(context));
-                long currentModifyTime = currentFileModifyTimeMillis();
                 //检查是否有更新文件
                 if (checkUpdateAndUnZip(context)) {
                     debugWithTimeMillis("YauldDex----install---C");
@@ -152,21 +152,22 @@ public class YauldDex {
                             if (ResourcePatcher.patch(context, yauldFolder, getYauldUpdateTempFolder(context), externalResourcePath)) {
                                 debugWithTimeMillis("YauldDex----install---F");
                                 YauldSP.setUpdateContentType(context, YauldSP.CONTENT_DEX_RES);
-                                FileUtils.setFileLastModify(getYauldUpdateResourceZipPath(context), currentModifyTime);
-                            }else{
+                                YauldSP.setUpdateResZipMd5(context, MD5.md5File(getYauldUpdateResourceZipPath(context)));
+                            } else {
                                 debugWithTimeMillis("YauldDex----install---G");
                                 externalResourcePath = null;
                                 YauldSP.setUpdateContentType(context, YauldSP.CONTENT_DEX);
+                                YauldSP.setUpdateResZipMd5(context, null);
                             }
-                            FileUtils.setFileLastModify(new File(getYauldUpdateFolder(context), "patch.dex"), currentModifyTime);
-                            YauldSP.setUpdateFileModifyTime(context, currentModifyTime);
+                            debugWithTimeMillis("YauldDex----install---H");
+                            YauldSP.setUpdateDexPatchMd5(context, MD5.md5File(new File(getYauldUpdateFolder(context), "patch.dex")));
                         }
                     }
                 }
             }
         } catch (IOException e) {
             e.printStackTrace();
-            debugWithTimeMillis("YauldDex----install---H");
+            debugWithTimeMillis("YauldDex----install---I");
         } finally {
             FileUtils.delete(getYauldUpdateTempFolder(context));
             // 释放锁
@@ -185,41 +186,42 @@ public class YauldDex {
                 }
             }
         }
-        debugWithTimeMillis("YauldDex----install---I");
-    }
-
-    private static long currentFileModifyTimeMillis() {
-        long l = System.currentTimeMillis() / 1000;
-        return l * 1000;
+        debugWithTimeMillis("YauldDex----install---J");
     }
 
     /**
      * 判断 patch.zip 和 resource.zip 的修改时间是否一致，如果不一致，则删除更新的update 和 update_temp 重新解压
+     *
      * @param context
      * @return
      */
-    private static boolean checkLastUpdateFile(Context context){
+    private static boolean checkLastUpdateFile(Context context) {
         File dexPatchFile = new File(getYauldUpdateFolder(context), "patch.dex");
         File resourceZipFile = new File(getYauldUpdateResourceZipPath(context));
-
+        debugWithTimeMillis("YauldDex----checkLastUpdateFile---A");
         String updateContentType = YauldSP.getUpdateContentType(context);
-        if(YauldSP.CONTENT_DEX.equals(updateContentType)){
-            if(!dexPatchFile.exists() || resourceZipFile.exists()){
+        if (YauldSP.CONTENT_DEX.equals(updateContentType)) {
+            if (!dexPatchFile.exists() || resourceZipFile.exists()) {
                 return false;
             }
-        }else if(YauldSP.CONTENT_DEX_RES.equals(updateContentType)){
-            if(!dexPatchFile.exists() || !resourceZipFile.exists()){
+        } else if (YauldSP.CONTENT_DEX_RES.equals(updateContentType)) {
+            if (!dexPatchFile.exists() || !resourceZipFile.exists()) {
                 return false;
             }
-        }else{
+        } else {
             return false;
         }
+        debugWithTimeMillis("YauldDex----checkLastUpdateFile---B");
 
         if (dexPatchFile.exists()) {
-            long updateFileModifyTime = YauldSP.getUpdateFileModifyTime(context);
-            if (dexPatchFile.lastModified() == updateFileModifyTime) {
+            String updateDexPatchMd5 = YauldSP.getUpdateDexPatchMd5(context);
+            debugWithTimeMillis("YauldDex----checkLastUpdateFile---C");
+            if (updateDexPatchMd5 != null && updateDexPatchMd5.equals(MD5.md5File(dexPatchFile))) {
+                debugWithTimeMillis("YauldDex----checkLastUpdateFile---D");
                 if (resourceZipFile.exists()) {
-                    if(resourceZipFile.lastModified() == updateFileModifyTime){
+                    String updateResZipMd5 = YauldSP.getUpdateResZipMd5(context);
+                    if (updateResZipMd5 != null && updateResZipMd5.equals(MD5.md5File(resourceZipFile))) {
+                        debugWithTimeMillis("YauldDex----checkLastUpdateFile---F");
                         return true;
                     }
                 } else {

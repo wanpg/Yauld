@@ -34,6 +34,49 @@ public class YauldSP {
         getSharePreferences(context).edit().putLong("update_file_modify_time", time).commit();
     }
 
+
+    static String getUpdateZipMd5(Context context){
+        return getSharePreferences(context).getString("update_zip_md5", null);
+    }
+
+    static void setUpdateZipMd5(Context context, String md5){
+        SharedPreferences.Editor edit = getSharePreferences(context).edit();
+        if(md5 == null){
+            edit.remove("update_zip_md5");
+        }else{
+            edit.putString("update_zip_md5", md5);
+        }
+        edit.commit();
+    }
+
+    static String getUpdateDexPatchMd5(Context context){
+        return getSharePreferences(context).getString("update_dex_patch_md5", null);
+    }
+
+    static void setUpdateDexPatchMd5(Context context, String md5){
+        SharedPreferences.Editor edit = getSharePreferences(context).edit();
+        if(md5 == null){
+            edit.remove("update_dex_patch_md5");
+        }else{
+            edit.putString("update_dex_patch_md5", md5);
+        }
+        edit.commit();
+    }
+
+    static String getUpdateResZipMd5(Context context){
+        return getSharePreferences(context).getString("update_res_zip_md5", null);
+    }
+
+    static void setUpdateResZipMd5(Context context, String md5){
+        SharedPreferences.Editor edit = getSharePreferences(context).edit();
+        if(md5 == null){
+            edit.remove("update_res_zip_md5");
+        }else{
+            edit.putString("update_res_zip_md5", md5);
+        }
+        edit.commit();
+    }
+
     static String getUpdateContentType(Context context){
         return getSharePreferences(context).getString("update_content_type", null);
     }

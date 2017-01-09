@@ -6,5 +6,12 @@ package com.wanpg.yauld;
 public class Test {
 
     public static void main(String[] args){
+
+    }
+
+    public static void test(Runnable runnable){
+        long start = System.currentTimeMillis();
+        runnable.run();
+        System.out.println("用时：" + (System.currentTimeMillis() - start) + "ms");
     }
 }
