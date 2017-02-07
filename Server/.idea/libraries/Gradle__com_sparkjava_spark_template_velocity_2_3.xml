@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Gradle: com.sparkjava:spark-template-velocity:2.3">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.sparkjava/spark-template-velocity/2.3/f164ddf6540447546ad2edcf5cb45f648ed70ff5/spark-template-velocity-2.3.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.sparkjava/spark-template-velocity/2.3/22b0719e74c14f3bd1154e73ea389a7991b8e5bb/spark-template-velocity-2.3-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

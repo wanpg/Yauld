@@ -1,0 +1,18 @@
+<!doctype html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Yauld</title>
+    <link rel="stylesheet" type="text/css" href="../style.css" charset="utf-8">
+</head>
+<body>
+    <div class="page">
+        <h1>Yauld-Android HotFix Plug-in</h1>
+        <form action="/apk/upload" method="post" class="add-entry" enctype="multipart/form-data">
+            <dl>
+                <dt>apk文件:
+                <dd><input type="file" size="30" name="file">
+                <dd><input type="submit" value="上传">
+            </dl>
+        </form>
+    </div>
+</body>

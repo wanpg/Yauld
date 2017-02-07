@@ -1,8 +1,8 @@
 package com.wanpg.yauld.diff;
 
 import com.wanpg.yauld.utils.FileUtils;
+import com.wanpg.yauld.utils.MD5;
 import com.wanpg.yauld.utils.TextUtils;
-import com.wanpg.yauld.utils.Utils;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,8 +21,8 @@ public class BaseDiff {
         List<String> addedFilePathArray = new ArrayList<>();
         for(String oldFileName : oldFileList){
             if(newFileList.contains(oldFileName)){
-                String oldMd5 = Utils.md5File(new File(oldFolder, oldFileName));
-                String newMd5 = Utils.md5File(new File(newFolder, oldFileName));
+                String oldMd5 = MD5.md5File(new File(oldFolder, oldFileName));
+                String newMd5 = MD5.md5File(new File(newFolder, oldFileName));
                 if(newMd5 != null && newMd5.equals(oldMd5)){
                     // 相等
                 }else{

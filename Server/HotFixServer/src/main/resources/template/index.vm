@@ -1,0 +1,21 @@
+<!doctype html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <title>Yauld</title>
+    <link rel="stylesheet" type="text/css" href="style.css" charset="utf-8">
+</head>
+<body>
+    <div class="page">
+        <h1>Yauld-Android HotFix Plug-in</h1>
+        <ul class="entries">
+            #if($entries && $entries.size() > 0)
+                #foreach($entry in $entries)
+                    <li><h2><a href="/apk/show?package=${entry.getPackageName()}">${entry.getName()}</a></h2></li>
+                #end
+            #else
+                <li><em>目前还没有应用创建</em></li>
+            #end
+            <li><a href="/apk/create">创建</a></li>
+        </ul>
+    </div>
+</body>

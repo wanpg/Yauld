@@ -55,7 +55,7 @@ update.zip
 ##### 4.2 如何保证应用快速启动
 ```
 1. 如果 update/resource.zip 和 update/patch.dex 已经存在，校验这两个文件的MD5与保存的是否一致，如果一致，则跳过解压和patch阶段
-2. 在应用运行中提前 预先优化dex和patch资源文件
+2. 在应用运行中提前 预先优化dex和patch资源文件(待实现)
 ```
 ##### 4.3 更新检查和下载功能
 ```
@@ -98,3 +98,11 @@ update.zip
 2. 
 ```
 
+### 8. 相关资料
+1. [Smali on Github](https://github.com/JesusFreke/smali/wiki)
+2. [Android Build System](https://ejf.io/android/build_system/)
+3. [深度理解Android InstantRun原理以及源码分析](http://blog.csdn.net/nupt123456789/article/details/51828701)
+4. [Tinker -- 微信Android热补丁方案](https://github.com/Tencent/tinker/wiki)
+5. [安卓App热补丁动态修复技术介绍](https://mp.weixin.qq.com/s?__biz=MzI1MTA1MzM2Nw==&mid=400118620&idx=1&sn=b4fdd5055731290eef12ad0d17f39d4a)
+6. [Android热更新方案Robust](http://tech.meituan.com/android_robust.html)
+7. [Java BSDiff的实现](https://github.com/eclipse/rt.equinox.p2/tree/master/bundles/ie.wombat.jbdiff)

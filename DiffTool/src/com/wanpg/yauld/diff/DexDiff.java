@@ -44,7 +44,7 @@ public class DexDiff extends BaseDiff {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            FileUtils.delete(dexFolder, true);
+//            FileUtils.delete(dexFolder, true);
         }
     }
 
