@@ -205,6 +205,7 @@ public class ZipUtils {
 
     /**
      * 解压apk下面的res、assets和resources.arsc
+     * 解压 android manifest 6.0以下版本，要求压缩包中存在AndroidManifest.xml
      */
     public static boolean unZipApkResources(String path, String destDir) {
         File pathFile = new File(destDir);
@@ -217,8 +218,10 @@ public class ZipUtils {
             for (Enumeration entries = zip.entries(); entries.hasMoreElements(); ) {
                 ZipEntry entry = (ZipEntry) entries.nextElement();
                 String zipEntryName = entry.getName();
-                if ("resources.arsc".equals(zipEntryName) || zipEntryName.startsWith("res")
-                        || zipEntryName.startsWith("assets")) {
+                if ("resources.arsc".equals(zipEntryName)
+                        || zipEntryName.startsWith("res")
+                        || zipEntryName.startsWith("assets")
+                        || "AndroidManifest.xml".equals(zipEntryName)) {
                     File outFile = new File(destDir, zipEntryName);
                     //判断路径是否存在,不存在则创建文件路径
                     File file = outFile.getParentFile();

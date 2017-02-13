@@ -2,7 +2,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
     <title>Yauld</title>
-    <link rel="stylesheet" type="text/css" href="../style.css" charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="../../style.css" charset="utf-8">
 </head>
 <body>
     <div class="page">
@@ -14,20 +14,34 @@
         <p>上传apk---<a href="/apk/upload">点这里</a></p>
         <ul class="entries">
             #if($items && $items.size()>0)
-                <table border="1">
+                <table border="1" class="dataintable">
                     <tr>
-                        <th>序号</th>
-                        <th>版本号</th>
-                        <th>MD5</th>
+                        <td>序号</td>
+                        <td>版本号</td>
+                        <td>MD5</td>
+                        <td>热更新版本</td>
+                        <td>类型</td>
                     </tr>
-                    #set($index = 1)
-                    #foreach($apkitem in $items)
-                        <tr>
-                            <th>$index</th>
-                            <th><a href="/apk/hot/show?package=entry.package&version=entry.version_name">${apkitem.getVersionName()}</th>
-                            <th>${apkitem.getMd5()}</th>
-                        </tr>
-                        #set($index = $index + 1)
+                    #set($index = 0)
+                    #foreach($item in $items)
+                        #if(${item.getHotVersion()})
+                            <tr>
+                                <td>$index</td>
+                                <td>${item.getVersionName()}</td>
+                                <td>${item.getMd5()}</td>
+                                <td>${item.getHotVersion()}</td>
+                                <td>热更新</td>
+                            </tr>
+                        #else
+                            #set($index = $index + 1)
+                            <tr>
+                                <th>$index</th>
+                                <th>${item.getVersionName()}</th>
+                                <th>${item.getMd5()}</th>
+                                <th></th>
+                                <th>apk</th>
+                            </tr>
+                        #end
                     #end
                 </table>
             #else

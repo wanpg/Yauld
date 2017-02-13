@@ -23,7 +23,7 @@ public class BaseDiff {
             if(newFileList.contains(oldFileName)){
                 String oldMd5 = MD5.md5File(new File(oldFolder, oldFileName));
                 String newMd5 = MD5.md5File(new File(newFolder, oldFileName));
-                if(newMd5 != null && newMd5.equals(oldMd5)){
+                if(newMd5.equals(oldMd5)){
                     // 相等
                 }else{
                     addedFilePathArray.add(oldFileName);

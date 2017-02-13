@@ -2,6 +2,7 @@ package com.wanpg.yauld.server.dao;
 
 import com.wanpg.yauld.server.model.Apk;
 import com.wanpg.yauld.server.model.ApkItem;
+import com.wanpg.yauld.server.model.HotItem;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -15,20 +16,20 @@ public class ApkDao extends Dao {
 
     public static String TABLE1 = "create table if not exists apk (" +
             "  id integer primary key autoincrement," +
-            "  name string not null," +
-            "  package string not null" +
+            "  name TEXT not null," +
+            "  package TEXT not null" +
             ");";
 
     public static String TABLE2 = "create table if not exists apk_update (" +
-            "  package string not null," +
-            "  version_name string not null primary key," +
-            "  md5 string not null" +
+            "  package TEXT not null," +
+            "  version_name TEXT not null primary key," +
+            "  md5 TEXT not null" +
             ");";
     public static String TABLE3 = "create table if not exists hot_update (" +
-            "  package string not null," +
-            "  version_name string not null," +
-            "  hot_version string not null," +
-            "  md5 string not null" +
+            "  package TEXT not null," +
+            "  version_name TEXT not null," +
+            "  hot_version TEXT not null," +
+            "  md5 TEXT not null" +
             ");";
 
     @Override
@@ -55,7 +56,7 @@ public class ApkDao extends Dao {
         try {
             ct = getConnection();
             sm = ct.createStatement();
-            rs = sm.executeQuery("select name, package from apk");
+            rs = sm.executeQuery("select * from apk");
             while (rs.next()){
                 Apk apk = new Apk();
                 apk.name = rs.getString("name");
@@ -74,7 +75,7 @@ public class ApkDao extends Dao {
         try {
             ct = getConnection();
             sm = ct.createStatement();
-            rs = sm.executeQuery("select name, package from apk WHERE package='" + packageName + "'");
+            rs = sm.executeQuery("select * from apk WHERE package='" + packageName + "'");
             if (rs.next()){
                 Apk apk = new Apk();
                 apk.name = rs.getString("name");
@@ -180,7 +181,7 @@ public class ApkDao extends Dao {
         try {
             ct = getConnection();
             sm = ct.createStatement();
-            rs = sm.executeQuery("select name, package from apk_update WHERE package='" + packageName + "' and version_name='"+ versionName +"'" );
+            rs = sm.executeQuery("select * from apk_update WHERE package='" + packageName + "' and version_name='"+ versionName +"'" );
             if (rs.next()){
                 ApkItem apkItem = new ApkItem();
                 apkItem.setPackageName(rs.getString("package"));
@@ -194,5 +195,59 @@ public class ApkDao extends Dao {
             closeConnection();
         }
         return null;
+    }
+
+    public void addHotItem(HotItem item){
+        try {
+            ct = getConnection();
+            ct.setAutoCommit(false);
+            PreparedStatement statement = ct.prepareStatement("insert into hot_update (package, version_name, hot_version, md5) values (?, ?, ?, ?)");
+            statement.setString(1, item.getPackageName());
+            statement.setString(2, item.getVersionName());
+            statement.setString(3, item.getHotVersion());
+            statement.setString(4, item.getMd5());
+            statement.addBatch();
+            statement.executeBatch();
+            sm = statement;
+            ct.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+    }
+
+    public void deleteHotItem(HotItem item){
+        try {
+            ct = getConnection();
+            sm = ct.createStatement();
+            sm.execute("delete from hot_update where package='" + item.getPackageName() + "' and version_name='"+ item.getVersionName() +"' and hot_version='"+ item.getHotVersion() +"'");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+    }
+
+    public List<HotItem> queryHotItems(String packageName, String versionName){
+        ArrayList<HotItem> hotItems = new ArrayList<>();
+        try {
+            ct = getConnection();
+            sm = ct.createStatement();
+            rs = sm.executeQuery("select * from hot_update WHERE package='" + packageName + "' and version_name='"+ versionName +"'" );
+            while (rs.next()){
+                HotItem hotItem = new HotItem();
+                hotItem.setPackageName(rs.getString("package"));
+                hotItem.setVersionName(rs.getString("version_name"));
+                hotItem.setMd5(rs.getString("md5"));
+                hotItem.setHotVersion(rs.getString("hot_version"));
+                hotItems.add(hotItem);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            closeConnection();
+        }
+        return hotItems;
     }
 }

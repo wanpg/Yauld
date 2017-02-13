@@ -11,18 +11,25 @@
     android:paddingTop="@dimen/activity_vertical_margin">
 
     <TextView
-        android:layout_width="wrap_content"
+        android:id="@+id/update_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/update"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Hello World! /n I'm a old Demo with old Image"/>
+        android:text="更新"/>
+
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
 
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@mipmap/ic_launcher"/>
 
-    <Button
-        android:id="@+id/restart"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="重启"/>
 </LinearLayout>

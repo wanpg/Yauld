@@ -16,12 +16,14 @@ import com.wanpg.yauld.patcher.ResourcePatcher;
 import com.wanpg.yauld.utils.FileUtils;
 import com.wanpg.yauld.utils.MD5;
 import com.wanpg.yauld.utils.Utils;
+import com.wanpg.yauld.utils.VersionUtils;
 import com.wanpg.yauld.utils.ZipUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.nio.channels.FileChannel;
 import java.nio.channels.FileLock;
 import java.util.ArrayList;
@@ -33,7 +35,7 @@ import java.util.List;
 public class YauldDex {
 
     public static final String TAG = YauldDex.class.getSimpleName();
-    private static final String YAULD_UPDATE_ZIP_NAME = "update.zip";
+    public static final String YAULD_UPDATE_ZIP_NAME = "update.zip";
 
     public static void debug(String info) {
         Log.d(TAG, info);
@@ -61,7 +63,7 @@ public class YauldDex {
      * @param context
      * @return
      */
-    private static String getYauldFolder(Context context) {
+    public static String getYauldFolder(Context context) {
 //        return context.getFilesDir().getPath() + File.separator + "yauld";
         return context.getExternalFilesDir(null).getPath() + File.separator + "yauld";
     }
@@ -278,15 +280,17 @@ public class YauldDex {
         }
 
         YauldDex.debugWithTimeMillis("----------------setupClassLoader---A---");
-        YauldDexClassLoader yauldDexClassLoader = new YauldDexClassLoader(classLoader, nativeLibraryPath, dexOptFolderPath, dexList);
+        YauldDexClassLoader yauldDexClassLoader = new YauldDexClassLoader(classLoader, nativeLibraryPath, dexOptFolderPath, YauldDexClassLoader.createDexPath(dexList));
         try {
             Class<?> aClass = yauldDexClassLoader.loadClass(AppInfo.class.getName());
             if (aClass != null) {
                 Field declaredField = aClass.getDeclaredField("VERSION");
                 if (declaredField != null) {
                     Object versionValue = declaredField.get(aClass);
-                    if (versionValue != null && Utils.compareVersion(AppInfo.VERSION, versionValue.toString()) > 0) {
-                        YauldDexClassLoader.setParent(classLoader, yauldDexClassLoader);
+                    if (versionValue != null && VersionUtils.compareVersion(AppInfo.VERSION, versionValue.toString()) > 0) {
+                        Utils.installOtherDexes(classLoader, new File(dexOptFolderPath), dexList);
+//                        YauldDexClassLoader.setParent(classLoader, yauldDexClassLoader);
+                        yauldDexClassLoader = null;
                         AppInfo.VERSION = versionValue.toString();
                         YauldDex.debugWithTimeMillis("----------------setupClassLoader---B---");
                         return true;
@@ -298,6 +302,12 @@ public class YauldDex {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
             e.printStackTrace();
         }
         yauldDexClassLoader = null;
@@ -400,5 +410,31 @@ public class YauldDex {
                 activityRecords.remove(activity);
             }
         });
+    }
+
+    public static String getVersionName(Context context){
+        try {
+            return context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionName;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getVersionCode(Context context){
+        try {
+            return String.valueOf(context.getPackageManager().getPackageInfo(context.getPackageName(), 0).versionCode);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static String getHotVersion(Context context){
+        return AppInfo.VERSION;
+    }
+
+    public static String getPackageName(Context context){
+        return context.getPackageName();
     }
 }

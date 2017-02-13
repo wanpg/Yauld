@@ -10,15 +10,15 @@ public class YauldDexClassLoader extends ClassLoader {
 
     private final DelegateClassLoader delegateClassLoader;
 
-    public YauldDexClassLoader(ClassLoader original, String nativeLibraryPath, final String codeCacheDir, final List<String> dexes) {
+    public YauldDexClassLoader(ClassLoader original, String nativeLibraryPath, final String codeCacheDir, final String dexPath) {
         super(original.getParent());
-        String pathBuilder = createDexPath(dexes);
-        delegateClassLoader = new DelegateClassLoader(pathBuilder, codeCacheDir, nativeLibraryPath, original);
+        delegateClassLoader = new DelegateClassLoader(dexPath, codeCacheDir, nativeLibraryPath, original.getParent());
     }
 
-    public Class<?> findClass(String className) throws ClassNotFoundException {
+    @Override
+    protected Class<?> findClass(String name) throws ClassNotFoundException {
         try {
-            return delegateClassLoader.findClass(className);
+            return delegateClassLoader.findClass(name);
         } catch (ClassNotFoundException e) {
             throw e;
         }
@@ -38,7 +38,7 @@ public class YauldDexClassLoader extends ClassLoader {
         }
     }
 
-    private static String createDexPath(List<String> dexes) {
+    public static String createDexPath(List<String> dexes) {
         StringBuilder pathBuilder = new StringBuilder();
         boolean first = true;
         for (String dex : dexes) {

@@ -10,7 +10,7 @@
         <ul class="entries">
             #if($entries && $entries.size() > 0)
                 #foreach($entry in $entries)
-                    <li><h2><a href="/apk/show?package=${entry.getPackageName()}">${entry.getName()}</a></h2></li>
+                    <li><h2><a href="/apk/show/${entry.getPackageName()}">${entry.getName()}</a></h2></li>
                 #end
             #else
                 <li><em>目前还没有应用创建</em></li>

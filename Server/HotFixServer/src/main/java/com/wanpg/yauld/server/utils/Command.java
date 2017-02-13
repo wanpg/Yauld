@@ -58,6 +58,7 @@ public class Command {
             String line;
             while ((line = reader.readLine()) != null) {
                 result.add(line);
+                System.out.println(line);
             }
         } catch (IOException e) {
             e.printStackTrace();

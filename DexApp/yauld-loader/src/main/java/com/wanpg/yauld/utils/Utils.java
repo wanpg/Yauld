@@ -1,9 +1,18 @@
 package com.wanpg.yauld.utils;
 
+import android.os.Build;
+import android.util.Log;
+
+import java.io.IOException;
+import java.lang.reflect.Array;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.List;
+
+import java.io.File;
 
 /**
  * Created by wangjinpeng on 2016/12/13.
@@ -21,48 +30,294 @@ public class Utils {
         }
     }
 
-    /**
-     * 比较版本大小
-     *
-     * @param oldVersion
-     * @param newVersion
-     * @return 小于 0 说明老版本大于新版本的版本号
-     * 大于 0 说明新版本版本号更大
-     * 等于 0 说明版本号相等
-     */
-    public static int compareVersion(String oldVersion, String newVersion) {
-        List<String> oldArray = formatVersion(oldVersion);
-        List<String> newArray = formatVersion(newVersion);
-        int size = oldArray.size() > newArray.size() ? oldArray.size() : newArray.size();
-        for (int i = 0; i < size; i++) {
-            int oldInt, newInt;
-            try {
-                oldInt = Integer.parseInt(oldArray.get(i));
-            } catch (Exception e) {
-                oldInt = 0;
-            }
-            try {
-                newInt = Integer.parseInt(newArray.get(i));
-            } catch (Exception e) {
-                newInt = 0;
-            }
-            if (oldInt > newInt) {
-                return -1;
-            } else {
-                return 1;
+    public static void installOtherDexes(ClassLoader loader, File dexDir, List<String> filePaths)
+            throws IllegalArgumentException, IllegalAccessException, NoSuchFieldException,
+            InvocationTargetException, NoSuchMethodException, IOException {
+        List<File> files = new ArrayList<>();
+        if (filePaths != null) {
+            for (String path : filePaths) {
+                files.add(new File(path));
             }
         }
-        return 0;
+        if (!files.isEmpty()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                V24.install(loader, files, dexDir);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                V23.install(loader, files, dexDir);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                V19.install(loader, files, dexDir);
+            } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+                V14.install(loader, files, dexDir);
+            }
+        }
     }
 
-    private static List<String> formatVersion(String version) {
-        List<String> arrayList = new ArrayList<>();
-        if (version.contains(".")) {
-            String[] split = version.split("\\.");
-            Collections.addAll(arrayList, split);
-        } else {
-            arrayList.add(version);
+    /**
+     * Installer for platform versions 14, 15, 16, 17 and 18.
+     */
+    private static final class V14 {
+
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries,
+                                    File optimizedDirectory)
+                throws IllegalArgumentException, IllegalAccessException,
+                NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            /* The patched class loader is expected to be a descendant of
+             * dalvik.system.BaseDexClassLoader. We modify its
+             * dalvik.system.DexPathList pathList field to append additional DEX
+             * file entries.
+             */
+            Field pathListField = findField(loader, "pathList");
+            Object dexPathList = pathListField.get(loader);
+            expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList,
+                    new ArrayList<>(additionalClassPathEntries), optimizedDirectory));
         }
-        return arrayList;
+
+        /**
+         * A wrapper around
+         * {@code private static final dalvik.system.DexPathList#makeDexElements}.
+         */
+        private static Object[] makeDexElements(
+                Object dexPathList, ArrayList<File> files, File optimizedDirectory)
+                throws IllegalAccessException, InvocationTargetException,
+                NoSuchMethodException {
+            Method makeDexElements =
+                    findMethod(dexPathList, "makeDexElements", ArrayList.class, File.class);
+
+            return (Object[]) makeDexElements.invoke(dexPathList, files, optimizedDirectory);
+        }
+    }
+
+
+    /**
+     * Installer for platform versions 19, 20, 21, 22.
+     */
+    private static final class V19 {
+
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries,
+                                    File optimizedDirectory)
+                throws IllegalArgumentException, IllegalAccessException,
+                NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            /* The patched class loader is expected to be a descendant of
+             * dalvik.system.BaseDexClassLoader. We modify its
+             * dalvik.system.DexPathList pathList field to append additional DEX
+             * file entries.
+             */
+            Field pathListField = findField(loader, "pathList");
+            Object dexPathList = pathListField.get(loader);
+            ArrayList<IOException> suppressedExceptions = new ArrayList<>();
+            expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList,
+                    new ArrayList<>(additionalClassPathEntries), optimizedDirectory,
+                    suppressedExceptions));
+            dexElementsSuppressedExceptions(dexPathList, suppressedExceptions);
+        }
+
+        /**
+         * A wrapper around
+         * {@code private static final dalvik.system.DexPathList#makeDexElements}.
+         */
+        private static Object[] makeDexElements(
+                Object dexPathList, ArrayList<File> files, File optimizedDirectory,
+                ArrayList<IOException> suppressedExceptions)
+                throws IllegalAccessException, InvocationTargetException,
+                NoSuchMethodException {
+            Method makeDexElements =
+                    findMethod(dexPathList, "makeDexElements", ArrayList.class, File.class,
+                            ArrayList.class);
+
+            return (Object[]) makeDexElements.invoke(dexPathList, files, optimizedDirectory,
+                    suppressedExceptions);
+        }
+    }
+
+    /**
+     * Installer for platform versions 23.
+     */
+    private static final class V23 {
+        private V23() {
+        }
+
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries,
+                                    File optimizedDirectory)
+                throws IllegalArgumentException, IllegalAccessException,
+                NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            /* The patched class loader is expected to be a descendant of
+             * dalvik.system.BaseDexClassLoader. We modify its
+             * dalvik.system.DexPathList pathList field to append additional DEX
+             * file entries.
+             */
+            Field pathListField = findField(loader, "pathList");
+            Object dexPathList = pathListField.get(loader);
+            ArrayList<IOException> suppressedExceptions = new ArrayList<>();
+            expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList,
+                    new ArrayList<>(additionalClassPathEntries), optimizedDirectory,
+                    suppressedExceptions));
+            dexElementsSuppressedExceptions(dexPathList, suppressedExceptions);
+        }
+
+        /**
+         * A wrapper around
+         * {@code private static final dalvik.system.DexPathList#makePathElements}.
+         */
+        private static Object[] makeDexElements(
+                Object dexPathList, ArrayList<File> files, File optimizedDirectory,
+                ArrayList<IOException> suppressedExceptions)
+                throws IllegalAccessException, InvocationTargetException,
+                NoSuchMethodException {
+            Method makeDexElements =
+                    findMethod(dexPathList, "makePathElements", List.class, File.class, List.class);
+
+            return (Object[]) makeDexElements.invoke(dexPathList, files, optimizedDirectory,
+                    suppressedExceptions);
+        }
+    }
+
+    /**
+     * Installer for platform versions 24, 25.
+     */
+    private static final class V24 {
+        private V24() {
+        }
+
+        private static void install(ClassLoader loader, List<File> additionalClassPathEntries,
+                                    File optimizedDirectory)
+                throws IllegalArgumentException, IllegalAccessException,
+                NoSuchFieldException, InvocationTargetException, NoSuchMethodException {
+            /* The patched class loader is expected to be a descendant of
+             * dalvik.system.BaseDexClassLoader. We modify its
+             * dalvik.system.DexPathList pathList field to append additional DEX
+             * file entries.
+             */
+            Field pathListField = findField(loader, "pathList");
+            Object dexPathList = pathListField.get(loader);
+            ArrayList<IOException> suppressedExceptions = new ArrayList<>();
+            expandFieldArray(dexPathList, "dexElements", makeDexElements(dexPathList,
+                    new ArrayList<>(additionalClassPathEntries), optimizedDirectory,
+                    suppressedExceptions, loader));
+            dexElementsSuppressedExceptions(dexPathList, suppressedExceptions);
+        }
+
+        /**
+         * A wrapper around
+         * {@code private static final dalvik.system.DexPathList#makeDexElements}.
+         */
+        private static Object[] makeDexElements(
+                Object dexPathList, ArrayList<File> files, File optimizedDirectory,
+                ArrayList<IOException> suppressedExceptions, ClassLoader classLoader)
+                throws IllegalAccessException, InvocationTargetException,
+                NoSuchMethodException {
+            Method makeDexElements =
+                    findMethod(dexPathList, "makeDexElements",
+                            List.class, File.class, List.class, ClassLoader.class);
+
+            return (Object[]) makeDexElements.invoke(dexPathList, files, optimizedDirectory,
+                    suppressedExceptions, classLoader);
+        }
+    }
+
+    private static void dexElementsSuppressedExceptions(Object dexPathList,
+                                                        ArrayList<IOException> suppressedExceptions)
+            throws NoSuchFieldException, IllegalAccessException {
+        if (suppressedExceptions.size() > 0) {
+            for (IOException e : suppressedExceptions) {
+                Log.w("YauldDex", "Exception in makeDexElement", e);
+            }
+            Field suppressedExceptionsField =
+                    findField(dexPathList, "dexElementsSuppressedExceptions");
+            IOException[] dexElementsSuppressedExceptions =
+                    (IOException[]) suppressedExceptionsField.get(dexPathList);
+
+            if (dexElementsSuppressedExceptions == null) {
+                dexElementsSuppressedExceptions =
+                        suppressedExceptions.toArray(
+                                new IOException[suppressedExceptions.size()]);
+            } else {
+                IOException[] combined =
+                        new IOException[suppressedExceptions.size() +
+                                dexElementsSuppressedExceptions.length];
+                suppressedExceptions.toArray(combined);
+                System.arraycopy(dexElementsSuppressedExceptions, 0, combined,
+                        suppressedExceptions.size(), dexElementsSuppressedExceptions.length);
+                dexElementsSuppressedExceptions = combined;
+            }
+
+            suppressedExceptionsField.set(dexPathList, dexElementsSuppressedExceptions);
+        }
+    }
+
+    /**
+     * Replace the value of a field containing a non null array, by a new array containing the
+     * elements of the original array plus the elements of extraElements.
+     *
+     * @param instance      the instance whose field is to be modified.
+     * @param fieldName     the field to modify.
+     * @param extraElements elements to append at the end of the array.
+     */
+    private static void expandFieldArray(Object instance, String fieldName,
+                                         Object[] extraElements)
+            throws NoSuchFieldException, IllegalArgumentException, IllegalAccessException {
+        Field jlrField = findField(instance, fieldName);
+        Object[] original = (Object[]) jlrField.get(instance);
+        Object[] combined = (Object[]) Array.newInstance(
+                original.getClass().getComponentType(), original.length + extraElements.length);
+        System.arraycopy(extraElements, 0, combined, 0, extraElements.length);
+        System.arraycopy(original, 0, combined, extraElements.length, original.length);
+        jlrField.set(instance, combined);
+    }
+
+    /**
+     * Locates a given field anywhere in the class inheritance hierarchy.
+     *
+     * @param instance an object to search the field into.
+     * @param name     field name
+     * @return a field object
+     * @throws NoSuchFieldException if the field cannot be located
+     */
+    private static Field findField(Object instance, String name) throws NoSuchFieldException {
+        for (Class<?> clazz = instance.getClass(); clazz != null; clazz = clazz.getSuperclass()) {
+            try {
+                Field field = clazz.getDeclaredField(name);
+
+
+                if (!field.isAccessible()) {
+                    field.setAccessible(true);
+                }
+
+                return field;
+            } catch (NoSuchFieldException e) {
+                // ignore and search next
+            }
+        }
+
+        throw new NoSuchFieldException("Field " + name + " not found in " + instance.getClass());
+    }
+
+    /**
+     * Locates a given method anywhere in the class inheritance hierarchy.
+     *
+     * @param instance       an object to search the method into.
+     * @param name           method name
+     * @param parameterTypes method parameter types
+     * @return a method object
+     * @throws NoSuchMethodException if the method cannot be located
+     */
+    private static Method findMethod(Object instance, String name, Class<?>... parameterTypes)
+            throws NoSuchMethodException {
+        for (Class<?> clazz = instance.getClass(); clazz != null; clazz = clazz.getSuperclass()) {
+            try {
+                Method method = clazz.getDeclaredMethod(name, parameterTypes);
+
+
+                if (!method.isAccessible()) {
+                    method.setAccessible(true);
+                }
+
+                return method;
+            } catch (NoSuchMethodException e) {
+                // ignore and search next
+            }
+        }
+
+        throw new NoSuchMethodException("Method " + name + " with parameters " +
+                Arrays.asList(parameterTypes) + " not found in " + instance.getClass());
     }
 }

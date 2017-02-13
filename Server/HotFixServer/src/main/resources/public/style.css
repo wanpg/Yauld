@@ -4,7 +4,7 @@ h1, h2          { font-family: 'Georgia', serif; margin: 0; }
 h1              { border-bottom: 2px solid #eee; }
 h2              { font-size: 1.2em; }
 
-.page           { margin: 2em auto; width: 35em; border: 5px solid #ccc;
+.page           { margin: 2em auto; width: 40em; border: 5px solid #ccc;
     padding: 0.8em; background: white; }
 .entries        { list-style: none; margin: 0; padding: 0; }
 .entries li     { margin: 0.8em 1.2em; }
@@ -16,3 +16,67 @@ h2              { font-size: 1.2em; }
 .flash          { background: #CEE5F5; padding: 0.5em;
     border: 1px solid #AACBE2; }
 .error          { background: #F0D6D6; padding: 0.5em; }
+
+/* ----------------------------------- 表格 ----------------------------------- */
+
+table.dataintable {
+    margin-top:10px;
+    border-collapse:collapse;
+    border:1px solid #aaa;
+    width:100%;
+}
+
+table.dataintable th {
+    vertical-align:baseline;
+    padding:5px 15px 5px 6px;
+    background-color:#d5d5d5;
+    border:1px solid #aaa;
+    text-align:left;
+}
+
+table.dataintable td {
+    vertical-align:text-top;
+    padding:6px 15px 6px 6px;
+    background-color:#efefef;
+    border:1px solid #aaa;
+}
+
+table.dataintable pre {
+    width:auto;
+    margin:0;
+    padding:0;
+    border:0;
+    background-color:transparent;
+}
+
+table.dataintable p {margin:0 0 2px 0;}
+
+div#maincontent table.dataintable ul, div#maincontent table.dataintable li {
+    list-style-type:none;
+    margin:0;
+    padding:0;
+}
+
+table.dataintable td em
+{
+    color:#0000ff;
+    font-weight:normal;
+}
+
+table.dataintable .table_value {color:#0F93D2;}
+
+.no_wrap {white-space:nowrap;}
+
+div#maincontent table.dataintable ul.listintable {
+    margin:20px;
+    padding:0;
+}
+
+div#maincontent table.dataintable ul.listintable  li{
+    list-style-type:disc;
+}
+
+
+table.dataintable td.html5_new {
+    background: #EFEFEF url(/i/table_bg_html5.gif) top right no-repeat;
+}

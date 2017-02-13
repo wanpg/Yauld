@@ -48,33 +48,26 @@ public class Main {
             return;
         }
 
-        StringBuilder result = new StringBuilder();
+        boolean isNoResult = true;
         if(argArray.size() > 0){
             for(String arg : argArray){
-                String res = null;
                 if("package".equalsIgnoreCase(arg)){
-                    res = "package=" + ApkUtils.getApkPackage(apkPath);
+                    isNoResult = false;
+                    LogUtils.print("package=" + ApkUtils.getApkPackage(apkPath));
                 }else if("version".equalsIgnoreCase(arg)){
-                    res = "version=" + ApkUtils.getApkVersionName(apkPath);
+                    isNoResult = false;
+                    LogUtils.print("version=" + ApkUtils.getApkVersionName(apkPath));
                 }else if("md5".equalsIgnoreCase(arg)){
-                    res = "md5=" + ApkUtils.getApkMd5(apkPath);
-                }
-                if(!TextUtils.isEmpty(res)){
-                    if(!TextUtils.isEmpty(result.toString())){
-                        result.append(";");
-                    }
-                    result.append(res);
+                    isNoResult = false;
+                    LogUtils.print("md5=" + ApkUtils.getApkMd5(apkPath));
                 }
             }
         }
-        if(TextUtils.isEmpty(result.toString())){
-            result.append("package=").append(ApkUtils.getApkPackage(apkPath))
-                    .append(";")
-                    .append("version=").append(ApkUtils.getApkVersionName(apkPath))
-                    .append(";")
-                    .append("md5=").append(ApkUtils.getApkMd5(apkPath));
+        if(isNoResult){
+            LogUtils.print("package=" + ApkUtils.getApkPackage(apkPath));
+            LogUtils.print("version=" + ApkUtils.getApkVersionName(apkPath));
+            LogUtils.print("md5=" + ApkUtils.getApkMd5(apkPath));
         }
-        LogUtils.print(result.toString());
     }
 
     private static void printHelp(){
@@ -149,13 +142,23 @@ public class Main {
         ZipUtil.unpack(new File(newApkPath), newApkFolder);
         File patchFolder = new File(tempFolder, "patch");
 
-        // dex 差分
-        DexDiff.diff(oldApkFolder.getAbsolutePath(), newApkFolder.getAbsolutePath(), patchFolder.getAbsolutePath());
-        // 资源差分
-        ResourceDiff.diff(oldApkFolder.getAbsolutePath(), newApkFolder.getAbsolutePath(), patchFolder.getAbsolutePath());
-        // 压缩所有差分资源
-        ZipUtil.pack(patchFolder, patchFile);
-        // 删除临时文件夹
-//        FileUtils.delete(tempFolder, true);
+        try {
+            // dex 差分
+            String diff = DexDiff.diff(oldApkFolder.getAbsolutePath(), newApkFolder.getAbsolutePath(), patchFolder.getAbsolutePath());
+            if(!TextUtils.isEmpty(diff)) {
+                // 资源差分
+                ResourceDiff.diff(oldApkFolder.getAbsolutePath(), newApkFolder.getAbsolutePath(), patchFolder.getAbsolutePath());
+                // 压缩所有差分资源
+                ZipUtil.pack(patchFolder, patchFile);
+                String md5 = MD5.md5File(patchFile);
+                LogUtils.print("hot_version=" + diff);
+                LogUtils.print("hot_md5=" + md5);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            // 删除临时文件夹
+            FileUtils.delete(tempFolder, true);
+        }
     }
 }
