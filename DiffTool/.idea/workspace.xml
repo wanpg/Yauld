@@ -21,21 +21,21 @@
   <component name="ExecutionTargetManager" SELECTED_TARGET="default_target" />
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="Main.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="Main.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/Main.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="639">
-              <caret line="114" column="0" lean-forward="false" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
+            <state relative-caret-position="120">
+              <caret line="125" column="32" lean-forward="true" selection-start-line="125" selection-start-column="32" selection-end-line="125" selection-end-column="32" />
               <folding />
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="DexDiff.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="DexDiff.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/diff/DexDiff.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="442">
-              <caret line="26" column="3" lean-forward="false" selection-start-line="26" selection-start-column="3" selection-end-line="26" selection-end-column="3" />
+            <state relative-caret-position="273">
+              <caret line="21" column="27" lean-forward="false" selection-start-line="21" selection-start-column="27" selection-end-line="21" selection-end-column="27" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -46,7 +46,7 @@
       <file leaf-file-name="MD5.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/utils/MD5.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="879">
+            <state relative-caret-position="1037">
               <caret line="65" column="18" lean-forward="false" selection-start-line="65" selection-start-column="18" selection-end-line="65" selection-end-column="18" />
               <folding>
                 <element signature="imports" expanded="true" />
@@ -58,7 +58,7 @@
       <file leaf-file-name="List.java" pinned="false" current-in-tab="false">
         <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/src.zip!/java/util/List.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-243">
+            <state relative-caret-position="2057">
               <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
               <folding />
             </state>
@@ -68,8 +68,8 @@
       <file leaf-file-name="BaseDiff.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/diff/BaseDiff.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="205">
-              <caret line="45" column="22" lean-forward="false" selection-start-line="45" selection-start-column="18" selection-end-line="45" selection-end-column="22" />
+            <state relative-caret-position="18">
+              <caret line="15" column="31" lean-forward="false" selection-start-line="15" selection-start-column="31" selection-end-line="15" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -147,16 +147,16 @@
         <option value="$PROJECT_DIR$/src/com/wanpg/yauld/utils/VersionUtils.java" />
         <option value="$PROJECT_DIR$/src/com/wanpg/yauld/diff/BaseDiff.java" />
         <option value="$PROJECT_DIR$/src/com/wanpg/yauld/Test.java" />
-        <option value="$PROJECT_DIR$/src/com/wanpg/yauld/diff/DexDiff.java" />
         <option value="$PROJECT_DIR$/src/com/wanpg/yauld/Main.java" />
         <option value="$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/demo/MainActivity$3$2.smali" />
+        <option value="$PROJECT_DIR$/src/com/wanpg/yauld/diff/DexDiff.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="1281" />
-    <option name="y" value="-257" />
-    <option name="width" value="1920" />
+    <option name="x" value="48" />
+    <option name="y" value="23" />
+    <option name="width" value="1872" />
     <option name="height" value="1057" />
   </component>
   <component name="ProjectView">
@@ -267,8 +267,8 @@
         </subPane>
       </pane>
       <pane id="PackagesPane" />
-      <pane id="Scope" />
       <pane id="Scratches" />
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -573,8 +573,8 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="1281" y="-257" width="1920" height="1057" extended-state="6" />
-    <editor active="true" />
+    <frame x="48" y="23" width="1872" height="1057" extended-state="6" />
+    <editor active="false" />
     <layout>
       <window_info id="Palette" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
@@ -585,25 +585,25 @@
       <window_info id="Capture Analysis" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Maven Projects" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3343983" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3343983" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Properties" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3298647" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Capture Tool" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24068157" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
+      <window_info id="Project" active="true" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2431694" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="UI Designer" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Theme Preview" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.398374" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.398374" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
+      <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3292683" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -693,124 +693,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="21930">
           <caret line="1337" column="26" lean-forward="false" selection-start-line="1337" selection-start-column="20" selection-end-line="1337" selection-end-column="26" />
-          <folding>
-            <element signature="e#0#220073#0" expanded="false" />
-            <element signature="imports" expanded="false" />
-            <element signature="e#48487#48488#0" expanded="false" />
-            <element signature="e#48531#48532#0" expanded="false" />
-            <element signature="e#49482#49483#0" expanded="false" />
-            <element signature="e#49530#49531#0" expanded="false" />
-            <element signature="e#49703#49704#0" expanded="false" />
-            <element signature="e#49733#49734#0" expanded="false" />
-            <element signature="e#50012#50013#0" expanded="false" />
-            <element signature="e#50042#50043#0" expanded="false" />
-            <element signature="e#50700#50701#0" expanded="false" />
-            <element signature="e#50728#50729#0" expanded="false" />
-            <element signature="e#57959#57960#0" expanded="false" />
-            <element signature="e#57997#57998#0" expanded="false" />
-            <element signature="e#68318#68319#0" expanded="false" />
-            <element signature="e#68381#68382#0" expanded="false" />
-            <element signature="e#75891#75892#0" expanded="false" />
-            <element signature="e#75922#75923#0" expanded="false" />
-            <element signature="e#76422#76423#0" expanded="false" />
-            <element signature="e#76461#76462#0" expanded="false" />
-            <element signature="e#76875#76876#0" expanded="false" />
-            <element signature="e#76914#76915#0" expanded="false" />
-            <element signature="e#79893#79894#0" expanded="false" />
-            <element signature="e#79917#79918#0" expanded="false" />
-            <element signature="e#122682#122683#0" expanded="false" />
-            <element signature="e#122711#122712#0" expanded="false" />
-            <element signature="e#122750#122751#0" expanded="false" />
-            <element signature="e#122778#122779#0" expanded="false" />
-            <element signature="e#126231#126232#0" expanded="false" />
-            <element signature="e#126282#126283#0" expanded="false" />
-            <element signature="e#128644#128645#0" expanded="false" />
-            <element signature="e#128689#128690#0" expanded="false" />
-            <element signature="e#131342#131343#0" expanded="false" />
-            <element signature="e#131377#131378#0" expanded="false" />
-            <element signature="e#136722#136723#0" expanded="false" />
-            <element signature="e#136761#136762#0" expanded="false" />
-            <element signature="e#139122#139123#0" expanded="false" />
-            <element signature="e#139161#139162#0" expanded="false" />
-            <element signature="e#143211#143212#0" expanded="false" />
-            <element signature="e#143249#143250#0" expanded="false" />
-            <element signature="e#143480#143481#0" expanded="false" />
-            <element signature="e#143518#143519#0" expanded="false" />
-            <element signature="e#143856#143857#0" expanded="false" />
-            <element signature="e#143913#143914#0" expanded="false" />
-            <element signature="e#144110#144111#0" expanded="false" />
-            <element signature="e#144152#144153#0" expanded="false" />
-            <element signature="e#144524#144525#0" expanded="false" />
-            <element signature="e#144566#144567#0" expanded="false" />
-            <element signature="e#144606#144607#0" expanded="false" />
-            <element signature="e#144675#144676#0" expanded="false" />
-            <element signature="e#144894#144895#0" expanded="false" />
-            <element signature="e#144938#144939#0" expanded="false" />
-            <element signature="e#144978#144979#0" expanded="false" />
-            <element signature="e#145049#145050#0" expanded="false" />
-            <element signature="e#145307#145308#0" expanded="false" />
-            <element signature="e#145384#145385#0" expanded="false" />
-            <element signature="e#145637#145638#0" expanded="false" />
-            <element signature="e#145680#145681#0" expanded="false" />
-            <element signature="e#145917#145918#0" expanded="false" />
-            <element signature="e#145983#145984#0" expanded="false" />
-            <element signature="e#146856#146857#0" expanded="false" />
-            <element signature="e#146892#146893#0" expanded="false" />
-            <element signature="e#147254#147255#0" expanded="false" />
-            <element signature="e#147288#147289#0" expanded="false" />
-            <element signature="e#147939#147940#0" expanded="false" />
-            <element signature="e#147973#147974#0" expanded="false" />
-            <element signature="e#148742#148743#0" expanded="false" />
-            <element signature="e#148776#148777#0" expanded="false" />
-            <element signature="e#149565#149566#0" expanded="false" />
-            <element signature="e#149599#149600#0" expanded="false" />
-            <element signature="e#150489#150490#0" expanded="false" />
-            <element signature="e#150523#150524#0" expanded="false" />
-            <element signature="e#150552#150553#0" expanded="false" />
-            <element signature="e#150599#150600#0" expanded="false" />
-            <element signature="e#151509#151510#0" expanded="false" />
-            <element signature="e#151543#151544#0" expanded="false" />
-            <element signature="e#151572#151573#0" expanded="false" />
-            <element signature="e#151650#151651#0" expanded="false" />
-            <element signature="e#151724#151725#0" expanded="false" />
-            <element signature="e#151773#151774#0" expanded="false" />
-            <element signature="e#153329#153330#0" expanded="false" />
-            <element signature="e#153364#153365#0" expanded="false" />
-            <element signature="e#153908#153909#0" expanded="false" />
-            <element signature="e#153949#153950#0" expanded="false" />
-            <element signature="e#167918#167919#0" expanded="false" />
-            <element signature="e#167976#167977#0" expanded="false" />
-            <element signature="e#168015#168016#0" expanded="false" />
-            <element signature="e#168064#168065#0" expanded="false" />
-            <element signature="e#170643#170644#0" expanded="false" />
-            <element signature="e#170690#170691#0" expanded="false" />
-            <element signature="e#171592#171593#0" expanded="false" />
-            <element signature="e#171632#171633#0" expanded="false" />
-            <element signature="e#173773#173774#0" expanded="false" />
-            <element signature="e#173813#173814#0" expanded="false" />
-            <element signature="e#173879#173880#0" expanded="false" />
-            <element signature="e#173941#173942#0" expanded="false" />
-            <element signature="e#173980#173981#0" expanded="false" />
-            <element signature="e#174027#174028#0" expanded="false" />
-            <element signature="e#177368#177369#0" expanded="false" />
-            <element signature="e#177421#177422#0" expanded="false" />
-            <element signature="e#183068#183069#0" expanded="false" />
-            <element signature="e#183122#183123#0" expanded="false" />
-            <element signature="e#185260#185261#0" expanded="false" />
-            <element signature="e#185300#185301#0" expanded="false" />
-            <element signature="e#186043#186044#0" expanded="false" />
-            <element signature="e#186083#186084#0" expanded="false" />
-            <element signature="e#187233#187234#0" expanded="false" />
-            <element signature="e#187289#187290#0" expanded="false" />
-            <element signature="e#188699#188700#0" expanded="false" />
-            <element signature="e#188746#188747#0" expanded="false" />
-            <element signature="e#191265#191266#0" expanded="false" />
-            <element signature="e#191312#191313#0" expanded="false" />
-            <element signature="e#215964#215965#0" expanded="false" />
-            <element signature="e#216009#216010#0" expanded="false" />
-            <element signature="e#218047#218048#0" expanded="false" />
-            <element signature="e#218108#218109#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -846,27 +728,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/AppInfo.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="336">
-          <caret line="33" column="15" lean-forward="true" selection-start-line="33" selection-start-column="15" selection-end-line="33" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/new/com/wanpg/yauld/AppInfo.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="561">
-          <caret line="33" column="15" lean-forward="false" selection-start-line="33" selection-start-column="15" selection-end-line="33" selection-end-column="15" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/AppInfo.smali" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/new/com/wanpg/yauld/AppInfo.smali" />
     <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/utils/Utils.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="119">
           <caret line="7" column="0" lean-forward="true" selection-start-line="7" selection-start-column="0" selection-end-line="7" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -901,70 +768,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/smali-2.2b4.jar!/org/jf/smali/Main.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="26" column="13" lean-forward="false" selection-start-line="26" selection-start-column="13" selection-end-line="26" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/smali-2.2b4.jar!/org/jf/smali/Smali.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="36" column="13" lean-forward="false" selection-start-line="36" selection-start-column="13" selection-end-line="36" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/baksmali-2.2b4.jar!/org/jf/baksmali/Main.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="196">
-          <caret line="76" column="0" lean-forward="false" selection-start-line="76" selection-start-column="0" selection-end-line="76" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/baksmali-2.2b4.jar!/org/jf/baksmali/DisassembleCommand.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="209">
-          <caret line="152" column="52" lean-forward="false" selection-start-line="152" selection-start-column="52" selection-end-line="152" selection-end-column="52" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/baksmali-2.2b4.jar!/org/jf/dexlib2/Opcode.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-5613">
-          <caret line="17" column="12" lean-forward="false" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/smali-2.2b4.jar!/org/jf/dexlib2/Opcode.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-170">
-          <caret line="17" column="12" lean-forward="false" selection-start-line="17" selection-start-column="12" selection-end-line="17" selection-end-column="12" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/baksmali-2.2b4.jar!/org/jf/dexlib2/Opcodes.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="102">
-          <caret line="14" column="13" lean-forward="false" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://$PROJECT_DIR$/libs/smali-2.2b4.jar!/org/jf/dexlib2/Opcodes.class">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="164">
-          <caret line="24" column="0" lean-forward="true" selection-start-line="24" selection-start-column="0" selection-end-line="24" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="jar://$PROJECT_DIR$/libs/smali-2.2b4.jar!/org/jf/smali/Main.class" />
+    <entry file="jar://$PROJECT_DIR$/libs/smali-2.2b4.jar!/org/jf/smali/Smali.class" />
+    <entry file="jar://$PROJECT_DIR$/libs/baksmali-2.2b4.jar!/org/jf/baksmali/Main.class" />
+    <entry file="jar://$PROJECT_DIR$/libs/baksmali-2.2b4.jar!/org/jf/baksmali/DisassembleCommand.class" />
+    <entry file="jar://$PROJECT_DIR$/libs/baksmali-2.2b4.jar!/org/jf/dexlib2/Opcode.class" />
+    <entry file="jar://$PROJECT_DIR$/libs/smali-2.2b4.jar!/org/jf/dexlib2/Opcode.class" />
+    <entry file="jar://$PROJECT_DIR$/libs/baksmali-2.2b4.jar!/org/jf/dexlib2/Opcodes.class" />
+    <entry file="jar://$PROJECT_DIR$/libs/smali-2.2b4.jar!/org/jf/dexlib2/Opcodes.class" />
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/src.zip!/java/lang/System.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="434">
@@ -983,41 +794,13 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/YauldDexApplication.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/YauldDexClassLoader$1.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/new/com/wanpg/yauld/demo/MainActivity$2$3.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="238">
-          <caret line="14" column="21" lean-forward="true" selection-start-line="14" selection-start-column="21" selection-end-line="14" selection-end-column="21" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/demo/MainActivity.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="527">
-          <caret line="65" column="13" lean-forward="true" selection-start-line="65" selection-start-column="13" selection-end-line="65" selection-end-column="13" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/YauldDexApplication.smali" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/YauldDexClassLoader$1.smali" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/new/com/wanpg/yauld/demo/MainActivity$2$3.smali" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/demo/MainActivity.smali" />
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/src.zip!/java/util/List.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-243">
+        <state relative-caret-position="2057">
           <caret line="144" column="12" lean-forward="false" selection-start-line="144" selection-start-column="12" selection-end-line="144" selection-end-column="12" />
           <folding />
         </state>
@@ -1025,7 +808,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/utils/MD5.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="879">
+        <state relative-caret-position="1037">
           <caret line="65" column="18" lean-forward="false" selection-start-line="65" selection-start-column="18" selection-end-line="65" selection-end-column="18" />
           <folding>
             <element signature="imports" expanded="true" />
@@ -1041,21 +824,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/diff/BaseDiff.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="205">
-          <caret line="45" column="22" lean-forward="false" selection-start-line="45" selection-start-column="18" selection-end-line="45" selection-end-column="22" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="jar:///Library/Java/JavaVirtualMachines/jdk1.8.0_92.jdk/Contents/Home/src.zip!/java/util/Collections.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="919">
           <caret line="552" column="27" lean-forward="false" selection-start-line="552" selection-start-column="27" selection-end-line="552" selection-end-column="27" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -1070,45 +842,34 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/demo/MainActivity$3$1.smali">
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/demo/MainActivity$3$1.smali" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/demo/MainActivity$2.smali" />
+    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/demo/MainActivity$3$2.smali" />
+    <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/diff/BaseDiff.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/demo/MainActivity$2.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/temp/.yauld-temp/patch/dex/temp/com/wanpg/yauld/demo/MainActivity$3$2.smali">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-17">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="639">
-          <caret line="114" column="0" lean-forward="false" selection-start-line="114" selection-start-column="0" selection-end-line="114" selection-end-column="0" />
-          <folding />
+        <state relative-caret-position="18">
+          <caret line="15" column="31" lean-forward="false" selection-start-line="15" selection-start-column="31" selection-end-line="15" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/diff/DexDiff.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="442">
-          <caret line="26" column="3" lean-forward="false" selection-start-line="26" selection-start-column="3" selection-end-line="26" selection-end-column="3" />
+        <state relative-caret-position="273">
+          <caret line="21" column="27" lean-forward="false" selection-start-line="21" selection-start-column="27" selection-end-line="21" selection-end-column="27" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/com/wanpg/yauld/Main.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="120">
+          <caret line="125" column="32" lean-forward="true" selection-start-line="125" selection-start-column="32" selection-end-line="125" selection-end-column="32" />
+          <folding />
         </state>
       </provider>
     </entry>

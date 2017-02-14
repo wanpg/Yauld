@@ -49,7 +49,7 @@ public class DexDiff extends BaseDiff {
             String newVersion = SmaliUtils.getFieldValue(new File(newDexSmaliFolder, APPINFO_CLASS_NAME.replace(".", File.separator) + ".smali").getAbsolutePath(), APPINFO_CLASS_NAME, VERSION_FIELD_NAME);
 
             if(VersionUtils.compareVersion(oldVersion, newVersion) > 0) {
-                internalDexDiff(oldDexSmaliFolder, newDexSmaliFolder, tempDexSmaliFolder);
+                internalDiff(oldDexSmaliFolder, newDexSmaliFolder, tempDexSmaliFolder);
                 smali2dex(tempDexSmaliFolder.getAbsolutePath(), new File(tempFolder, "patch.dex").getAbsolutePath());
                 return newVersion;
             }

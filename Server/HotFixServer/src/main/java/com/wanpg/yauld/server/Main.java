@@ -48,9 +48,10 @@ public class Main {
         File apkFolder = new File("HotFixServer/src/main/resources/public/files");
         apkFolder.mkdirs();
 
-        Spark.staticFileLocation("/public");
+        String projectDir = System.getProperty("user.dir");
+        String staticDir = "/HotFixServer/src/main/resources/public";
+        Spark.staticFiles.externalLocation(projectDir + staticDir);
         Spark.staticFiles.expireTime(10); // ten minutes
-
 
         Spark.get("/stop", (request, response) -> {
             Spark.stop();
