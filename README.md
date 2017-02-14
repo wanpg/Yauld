@@ -85,6 +85,7 @@ update.zip
 			-- assets
 			-- res
 			-- resources.arsc #会根据update_temp/resources.arsc.patch 做一次二进制合并
+			-- AndroidManifest.xml #apk中的原文件，在低于6.0的系统上加载资源时会校验此文件
 ```
 
 ### 6. 注意事项
@@ -95,10 +96,14 @@ update.zip
 
 ```
 1. md5算法，diff patch算法C代码实现，进一步优化生成合并patch包的时间(待实现)
-2. 
 ```
 
-### 8. 相关资料
+### 8. 存在问题
+
+* Android 4.4以下版本，在dalvikvm运行升级时会出现`java.lang.IllegalAccessError: Class ref in pre-verified class resolved to unexpected implementation`
+
+### 9. 相关资料
+
 1. [Smali on Github](https://github.com/JesusFreke/smali/wiki)
 2. [Android Build System](https://ejf.io/android/build_system/)
 3. [深度理解Android InstantRun原理以及源码分析](http://blog.csdn.net/nupt123456789/article/details/51828701)
@@ -106,3 +111,4 @@ update.zip
 5. [安卓App热补丁动态修复技术介绍](https://mp.weixin.qq.com/s?__biz=MzI1MTA1MzM2Nw==&mid=400118620&idx=1&sn=b4fdd5055731290eef12ad0d17f39d4a)
 6. [Android热更新方案Robust](http://tech.meituan.com/android_robust.html)
 7. [Java BSDiff的实现](https://github.com/eclipse/rt.equinox.p2/tree/master/bundles/ie.wombat.jbdiff)
+8. [Android系统源码](http://androidxref.com/)
